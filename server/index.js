@@ -1,7 +1,7 @@
 const express = require('express');
 require('dotenv').config();
-const helmet = require('helmet')
-const morgan = require('morgan')
+const helmet = require('helmet');
+const morgan = require('morgan');
 
 const port = process.env.PORT || 3000;
 
@@ -10,7 +10,11 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
-app.use(morgan('tiny'));
+
+if (app.get('env') === 'development') {
+  app.use(morgan('tiny'));
+  console.log('Morgan enabled...');
+}
 
 app.get('/', (req, res) => {
   res.send('Hello world!');
