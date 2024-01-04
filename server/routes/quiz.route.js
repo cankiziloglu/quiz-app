@@ -55,3 +55,5 @@ router.delete('/:topic/:id', async (req, res) => {
   if (!question) return res.status(404).send('Question not found.');
   res.send(question);
 });
+
+module.exports = router;
