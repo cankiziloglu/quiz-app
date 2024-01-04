@@ -2,6 +2,7 @@ const express = require('express');
 require('dotenv').config();
 const helmet = require('helmet');
 const morgan = require('morgan');
+const mongoose = require('mongoose');
 
 const port = process.env.PORT || 3000;
 
@@ -16,9 +17,9 @@ if (app.get('env') === 'development') {
   console.log('Morgan enabled...');
 }
 
-app.get('/', (req, res) => {
-  res.send('Hello world!');
-});
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log('Connected to MongoDB...'))
+  .catch(err => console.error('Could not connect to MongoDB...', err));
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
