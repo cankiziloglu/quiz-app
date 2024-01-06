@@ -10,11 +10,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Role {
-  USER
-  ADMIN
-}
-
 model User {
   user_id      Int           @id @default(autoincrement())
   email        String        @unique
@@ -80,4 +75,9 @@ model UserAnswer {
   question       Question    @relation(fields: [question_id], references: [question_id])
   answer         Answer      @relation(fields: [answer_id], references: [answer_id])
   created_at     DateTime    @default(now())
+}
+
+enum Role {
+  USER
+  ADMIN
 }
