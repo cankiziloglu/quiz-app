@@ -10,76 +10,74 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  user_id         Int           @id @default(autoincrement())
-  email           String        @unique
-  password        String
-  name            String
-  role            String        @default(USER)
-  quizzes         Quiz[]
-  quizAttempts    QuizAttempt[]
-  created_at      DateTime      @default(now())
-  updated_at      DateTime      @updatedAt
-}
-
-model Quiz {
-  quiz_id         Int           @id @default(autoincrement())
-  title           String
-  description     String?
-  duration        Int
-  questions       Question[]
-  quizAttempts    QuizAttempt[]
-  created_at      DateTime      @default(now())
-  updated_at      DateTime      @updatedAt
-}
-
-model Question {
-  question_id     Int           @id @default(autoincrement())
-  quiz_id         Int
-  content         String
-  answers         Answer[]
-  quiz            Quiz          @relation(fields: [quiz_id], references: [quiz_id])
-  userAnswers     UserAnswer[]
-  created_at      DateTime      @default(now())
-  updated_at      DateTime      @updatedAt
-}
-
-model Answer {
-  answer_id       Int           @id @default(autoincrement())
-  question_id     Int
-  content         String
-  is_correct      Boolean
-  question        Question      @relation(fields: [question_id], references: [question_id])
-  userAnswers     UserAnswer[]
-  created_at      DateTime      @default(now())
-  updated_at      DateTime      @updatedAt
-}
-
-model QuizAttempt {
-  attempt_id      Int           @id @default(autoincrement())
-  quiz_id         Int
-  user_id         Int
-  score           Int?
-  quiz            Quiz          @relation(fields: [quiz_id], references: [quiz_id])
-  user            User          @relation(fields: [user_id], references: [user_id])
-  userAnswers     UserAnswer[]
-  created_at      DateTime      @default(now())
-  updated_at      DateTime      @updatedAt
-}
-
-model UserAnswer {
-  user_answer_id  Int           @id @default(autoincrement())
-  attempt_id      Int
-  question_id     Int
-  selected_answer_id Int
-  quizAttempt     QuizAttempt   @relation(fields: [attempt_id], references: [attempt_id])
-  question        Question      @relation(fields: [question_id], references: [question_id])
-  selectedAnswer  Answer        @relation(fields: [selected_answer_id], references: [answer_id])
-  created_at      DateTime      @default(now())
-  updated_at      DateTime      @updatedAt
-}
-
 enum Role {
   USER
   ADMIN
+}
+
+model User {
+  user_id      Int           @id @default(autoincrement())
+  email        String        @unique
+  password     String
+  name         String
+  role         Role          @default(USER)
+  quizAttempts QuizAttempt[]
+  created_at   DateTime      @default(now())
+  updated_at   DateTime      @updatedAt
+}
+
+model Quiz {
+  quiz_id      Int           @id @default(autoincrement())
+  title        String
+  description  String?
+  duration     Int
+  questions    Question[]
+  quizAttempts QuizAttempt[]
+  created_at   DateTime      @default(now())
+  updated_at   DateTime      @updatedAt
+}
+
+model Question {
+  question_id Int          @id @default(autoincrement())
+  quiz_id     Int
+  content     String
+  answers     Answer[]
+  userAnswers UserAnswer[]
+  quiz        Quiz         @relation(fields: [quiz_id], references: [quiz_id])
+  created_at  DateTime     @default(now())
+  updated_at  DateTime     @updatedAt
+}
+
+model Answer {
+  answer_id   Int          @id @default(autoincrement())
+  question_id Int
+  content     String
+  is_correct  Boolean
+  userAnswers UserAnswer[]
+  question    Question     @relation(fields: [question_id], references: [question_id])
+  created_at  DateTime     @default(now())
+  updated_at  DateTime     @updatedAt
+}
+
+model QuizAttempt {
+  attempt_id  Int          @id @default(autoincrement())
+  quiz_id     Int
+  user_id     Int
+  score       Int?
+  quiz        Quiz         @relation(fields: [quiz_id], references: [quiz_id])
+  user        User         @relation(fields: [user_id], references: [user_id])
+  userAnswers UserAnswer[]
+  created_at  DateTime     @default(now())
+  updated_at  DateTime     @updatedAt
+}
+
+model UserAnswer {
+  user_answer_id Int         @id @default(autoincrement())
+  attempt_id     Int
+  question_id    Int
+  answer_id      Int
+  quizAttempt    QuizAttempt @relation(fields: [attempt_id], references: [attempt_id])
+  question       Question    @relation(fields: [question_id], references: [question_id])
+  answer         Answer      @relation(fields: [answer_id], references: [answer_id])
+  created_at     DateTime    @default(now())
 }
