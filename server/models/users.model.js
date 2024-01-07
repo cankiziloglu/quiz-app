@@ -1,21 +1,19 @@
 const Joi = require('joi');
-const { JoiPasswordExtendCore } = require('joi-password');
-const joiPassword = Joi.extend(JoiPasswordExtendCore);
+const passwordComplexity = require('joi-password-complexity');
+
+const complexity = {
+  min: 8,
+  max: 20,
+  lowerCase: 1,
+  upperCase: 1,
+  numeric: 1,
+};
 
 function validateSignup(user) {
   const schema = Joi.object({
     name: Joi.string().min(2).max(50).required(),
     email: Joi.string().email().required(),
-    password: joiPassword
-      .string()
-      .min(8)
-      .max(20)
-      .minOfLowercase(1)
-      .minOfUppercase(1)
-      .minOfNumeric(1)
-      .noWhiteSpaces()
-      .onlyLatinCharacters()
-      .required(),
+    password: passwordComplexity(complexity).required(),
   });
   return schema.validate(user);
 }
