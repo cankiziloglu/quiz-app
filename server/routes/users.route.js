@@ -13,7 +13,11 @@ const router = express.Router();
 // /api/users
 // Get all users (admin only)
 router.get('/', auth, admin, async (req, res) => {
-  const users = await prisma.user.findMany();
+    const users = await prisma.user.findMany({
+    orderBy: {
+      name: 'asc',
+    },
+  });
   res.json(users);
 });
 
