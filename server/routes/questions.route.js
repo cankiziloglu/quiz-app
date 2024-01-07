@@ -5,13 +5,16 @@ const { validate } = require('../models/questions.model');
 const auth = require('../middleware/auth');
 const admin = require('../middleware/admin');
 
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 
 // Get all questions of a quiz
 router.get('/', auth, admin, async (req, res) => {
   const questions = await prisma.question.findMany({
     where: {
       quiz_id: parseInt(req.params.quiz_id),
+    },
+    include: {
+      answers: true,
     },
     orderBy: {
       question_id: 'asc',
@@ -31,7 +34,7 @@ router.post('/', auth, admin, async (req, res) => {
   const question = await prisma.question.create({
     data: {
       content: data.content,
-      quiz_id: {
+      quiz: {
         connect: {
           quiz_id: quiz_id,
         },
@@ -91,14 +94,36 @@ router.put('/:question_id', auth, admin, async (req, res) => {
   res.json(question);
 });
 
-// Delete a question of a quiz
+// Delete a question with all its answers
 router.delete('/:question_id', auth, admin, async (req, res) => {
-  const question = await prisma.question.delete({
+  const question_id = parseInt(req.params.question_id);
+
+  // check if question exists
+  const question = await prisma.question.findUnique({
     where: {
-      question_id: parseInt(req.params.question_id),
+      question_id: question_id,
     },
   });
   if (!question) return res.status(404).send('Question not found.');
+
+  // Delete a question and all their answers with two separate queries in a transaction
+  const deleteAnswers = prisma.answer.deleteMany({
+    where: {
+      question_id: question_id,
+    },
+  });
+
+  const deleteQuestion = prisma.question.delete({
+    where: {
+      question_id: question_id,
+    },
+  });
+
+  const transaction = await prisma.$transaction([
+    deleteAnswers,
+    deleteQuestion,
+  ]);
+
   res.json(question);
 });
 

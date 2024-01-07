@@ -1,0 +1,188 @@
+[
+  {
+    "content": "React is also known as _____.",
+    "answers": [
+      { "content": "ReactJS", "is_correct": false },
+      { "content": "js", "is_correct": false },
+      { "content": "Both A. and B.", "is_correct": true },
+      { "content": "None of these", "is_correct": false }
+    ]
+  },
+  {
+    "content": "React is a ____.",
+    "answers": [
+      { "content": "Web development Framework", "is_correct": false },
+      { "content": "JavaScript Library", "is_correct": true },
+      { "content": "jQuery", "is_correct": false },
+      { "content": "Web Server", "is_correct": false }
+    ]
+  },
+  {
+    "content": "Which ReactJS function renders HTML to the web page?",
+    "answers": [
+      { "content": "render()", "is_correct": false },
+      { "content": "ReactDOM.render()", "is_correct": true },
+      { "content": "renders()", "is_correct": false },
+      { "content": "ReactDOM.renders()", "is_correct": false }
+    ]
+  },
+  {
+    "content": "JSX stands for _____.",
+    "answers": [
+      { "content": "JSON", "is_correct": false },
+      { "content": "JSON XML", "is_correct": false },
+      { "content": "JavaScript XML", "is_correct": true },
+      { "content": "JavaScript and AngularJS", "is_correct": false }
+    ]
+  },
+  {
+    "content": "JSX allows us to write _____.",
+    "answers": [
+      { "content": "jQuery in React", "is_correct": false },
+      { "content": "Angular Code in React", "is_correct": false },
+      { "content": "MySQL in React", "is_correct": false },
+      { "content": "HTML in React", "is_correct": true }
+    ]
+  },
+  {
+    "content": "What is the correct syntax to write expression in JSX?",
+    "answers": [
+      { "content": "[ expression ]", "is_correct": false },
+      { "content": "{ expression }", "is_correct": true },
+      { "content": "{{ expression }}", "is_correct": false },
+      { "content": "_expression", "is_correct": false }
+    ]
+  },
+  {
+    "content": "A class component must include the _______ statement.",
+    "answers": [
+      { "content": "extends React.Component", "is_correct": true },
+      { "content": "extends React", "is_correct": false },
+      { "content": "extends Component", "is_correct": false },
+      { "content": "extends React.Component.All", "is_correct": false }
+    ]
+  },
+  {
+    "content": "What are Props?",
+    "answers": [
+      {
+        "content": "Props are arguments passed into React components",
+        "is_correct": true
+      },
+      { "content": "Props are functions in the ReactJS", "is_correct": false },
+      {
+        "content": "Props are used to returns multiple values from the function",
+        "is_correct": false
+      },
+      { "content": "All of the above", "is_correct": false }
+    ]
+  },
+  {
+    "content": "What does props stand for?",
+    "answers": [
+      { "content": "Proper Arguments", "is_correct": false },
+      { "content": "Properties", "is_correct": true },
+      { "content": "Proper Return Values", "is_correct": false },
+      { "content": "All of the above", "is_correct": false }
+    ]
+  },
+  {
+    "content": "Which ReactJS command is used to create a new application?",
+    "answers": [
+      { "content": "create-react-app", "is_correct": true },
+      { "content": "new-react-app", "is_correct": false },
+      { "content": "create-new-reactapp", "is_correct": false },
+      { "content": "react-app", "is_correct": false }
+    ]
+  },
+  {
+    "content": "Which ReactJS command is used to set up everything you need to run a React Application?",
+    "answers": [
+      { "content": "create-react-app", "is_correct": true },
+      { "content": "new-react-app", "is_correct": false },
+      { "content": "create-new-reactapp", "is_correct": false },
+      { "content": "react-app", "is_correct": false }
+    ]
+  },
+  {
+    "content": "How to install create-react-app?",
+    "answers": [
+      { "content": "npx create-react-app -new my-app", "is_correct": false },
+      { "content": "npx create-react-app -app my-app", "is_correct": false },
+      { "content": "npx new-react-app my-app", "is_correct": false },
+      { "content": "npx create-react-app my-app", "is_correct": true }
+    ]
+  },
+  {
+    "content": "ES6 stands for ____.",
+    "answers": [
+      { "content": "ECMAScript 6", "is_correct": true },
+      { "content": "Extended-JavaScript Version 6", "is_correct": false },
+      { "content": "Extensive-JavaScript 6", "is_correct": false },
+      { "content": "Expanded-JavaScript 6", "is_correct": false }
+    ]
+  },
+  {
+    "content": "ECMAScript was created to standardize _____.",
+    "answers": [
+      { "content": "TypeScript", "is_correct": false },
+      { "content": "Java", "is_correct": false },
+      { "content": "JSON", "is_correct": false },
+      { "content": "JavaScript", "is_correct": true }
+    ]
+  },
+  {
+    "content": "In ES6 – A class is a type of _____.",
+    "answers": [
+      { "content": "Basic datatype", "is_correct": false },
+      { "content": "Derived datatype", "is_correct": false },
+      { "content": "Variable", "is_correct": false },
+      { "content": "Function", "is_correct": true }
+    ]
+  },
+  {
+    "content": "In ES6 – Which keyword is used to initiate a class?",
+    "answers": [
+      { "content": "function", "is_correct": false },
+      { "content": "class", "is_correct": true },
+      { "content": "ReactClass", "is_correct": false },
+      { "content": "ReactClassJs", "is_correct": false }
+    ]
+  },
+  {
+    "content": "In ES6 – The class properties are assigned inside a _____ method.",
+    "answers": [
+      { "content": "props()", "is_correct": false },
+      { "content": "properties()", "is_correct": false },
+      { "content": "constructor()", "is_correct": true },
+      { "content": "react-properties()", "is_correct": false }
+    ]
+  },
+  {
+    "content": "In ES6 – Which keyword is used for class inheritance?",
+    "answers": [
+      { "content": "extends", "is_correct": true },
+      { "content": "extend", "is_correct": false },
+      { "content": "inheritance", "is_correct": false },
+      { "content": "inheritances", "is_correct": false }
+    ]
+  },
+  {
+    "content": "In ES6 – What is the correct syntax of class inheritance?",
+    "answers": [
+      { "content": "class class1 extends class2{...}", "is_correct": true },
+      { "content": "class class1 extends | class2{...}", "is_correct": false },
+      { "content": "class class1 | extends class2{...}", "is_correct": false },
+      { "content": "class class1 | extends | class2{...}", "is_correct": false }
+    ]
+  },
+  {
+    "content": "In ES6 – Which method refers to the parent class?",
+    "answers": [
+      { "content": "parent()", "is_correct": false },
+      { "content": "super()", "is_correct": true },
+      { "content": "top()", "is_correct": false },
+      { "content": "main()", "is_correct": false }
+    ]
+  }
+]
