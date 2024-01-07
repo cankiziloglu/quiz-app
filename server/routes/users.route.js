@@ -13,7 +13,7 @@ const router = express.Router();
 // /api/users
 // Get all users (admin only)
 router.get('/', auth, admin, async (req, res) => {
-    const users = await prisma.user.findMany({
+  const users = await prisma.user.findMany({
     orderBy: {
       name: 'asc',
     },
@@ -89,6 +89,7 @@ router.get('/:user_id', auth, admin, async (req, res) => {
       user_id: parseInt(req.params.user_id),
     },
   });
+  if (!user) return res.status(404).send('User not found.');
   res.json(user);
 });
 
@@ -99,6 +100,7 @@ router.delete('/:user_id', auth, admin, async (req, res) => {
       user_id: parseInt(req.params.user_id),
     },
   });
+  if (!user) return res.status(404).send('User not found.');
   res.json(user);
 });
 
