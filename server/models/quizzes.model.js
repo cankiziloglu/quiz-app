@@ -7,7 +7,7 @@ function validateQuiz(quiz) {
     question_count: Joi.number().integer().min(1).required(),
     duration: Joi.number().integer().min(1).required(),
   });
-  return schema.validate(user);
+  return schema.validate(quiz);
 }
 
 exports.validate = validateQuiz;

@@ -44,7 +44,7 @@ router.post('/signup', async (req, res) => {
   res
     .status(201)
     .header('Authorization', token)
-    .send(_.pick(user, ['name', 'email']));
+    .send(_.pick(user, ['user_id', 'name', 'email']));
 });
 
 // /api/users/me
@@ -55,20 +55,20 @@ router.get('/me', auth, async (req, res) => {
       user_id: req.user.user_id,
     },
   });
-  res.json(user);
+  res.send(_.pick(user, ['user_id', 'name', 'email']));
 });
 
 // Update the profile of the logged-in user
 router.put('/me', auth, async (req, res) => {
-  const { error } = validateSignup(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
-
-  const checkUser = await prisma.user.findUnique({
-    where: { email: req.body.email },
-  });
-  if (checkUser) return res.status(400).send('User already registered.');
-
   if (req.body.password) {
+    const { error } = validateSignup(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
+
+    const checkUser = await prisma.user.findUnique({
+      where: { email: req.body.email },
+    });
+    if (checkUser) return res.status(400).send('This email is already in use.');
+
     const data = _.pick(req.body, ['email', 'password', 'name']);
     const salt = await bcrypt.genSalt(10);
     data.password = await bcrypt.hash(data.password, salt);
@@ -78,7 +78,24 @@ router.put('/me', auth, async (req, res) => {
       },
       data: { ...data },
     });
-    res.json(updatedUser);
+    res.send(_.pick(updatedUser, ['user_id', 'name', 'email']));
+  } else {
+    const { error } = validateLogin(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
+
+    const checkUser = await prisma.user.findUnique({
+      where: { email: req.body.email },
+    });
+    if (checkUser) return res.status(400).send('This email is already in use.');
+
+    const data = _.pick(req.body, ['email', 'name']);
+    const updatedUser = await prisma.user.update({
+      where: {
+        user_id: req.user.user_id,
+      },
+      data: { ...data },
+    });
+    res.send(_.pick(updatedUser, ['user_id', 'name', 'email']));
   }
 });
 
@@ -90,7 +107,7 @@ router.get('/:user_id', auth, admin, async (req, res) => {
     },
   });
   if (!user) return res.status(404).send('User not found.');
-  res.json(user);
+  res.send(_.pick(user, ['user_id', 'name', 'email']));
 });
 
 // Delete user by ID (admin only)
@@ -101,7 +118,7 @@ router.delete('/:user_id', auth, admin, async (req, res) => {
     },
   });
   if (!user) return res.status(404).send('User not found.');
-  res.json(user);
+  res.send(_.pick(user, ['user_id', 'name', 'email']));
 });
 
 module.exports = router;
