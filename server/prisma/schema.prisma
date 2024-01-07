@@ -56,15 +56,16 @@ model Answer {
 }
 
 model QuizAttempt {
-  attempt_id  Int          @id @default(autoincrement())
-  quiz_id     Int
-  user_id     Int
-  score       Int?
-  quiz        Quiz         @relation(fields: [quiz_id], references: [quiz_id])
-  user        User         @relation(fields: [user_id], references: [user_id])
-  userAnswers UserAnswer[]
-  created_at  DateTime     @default(now())
-  updated_at  DateTime     @updatedAt
+  attempt_id     Int          @id @default(autoincrement())
+  quiz_id        Int
+  user_id        Int
+  question_count Int
+  score          Int?
+  quiz           Quiz         @relation(fields: [quiz_id], references: [quiz_id])
+  user           User         @relation(fields: [user_id], references: [user_id])
+  userAnswers    UserAnswer[]
+  created_at     DateTime     @default(now())
+  updated_at     DateTime     @updatedAt
 }
 
 model UserAnswer {
