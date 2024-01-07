@@ -22,14 +22,15 @@ model User {
 }
 
 model Quiz {
-  quiz_id      Int           @id @default(autoincrement())
-  title        String
-  description  String?
-  duration     Int
-  questions    Question[]
-  quizAttempts QuizAttempt[]
-  created_at   DateTime      @default(now())
-  updated_at   DateTime      @updatedAt
+  quiz_id        Int           @id @default(autoincrement())
+  title          String
+  description    String?
+  question_count Int
+  duration       Int
+  questions      Question[]
+  quizAttempts   QuizAttempt[]
+  created_at     DateTime      @default(now())
+  updated_at     DateTime      @updatedAt
 }
 
 model Question {
