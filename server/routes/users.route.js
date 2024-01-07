@@ -117,8 +117,5 @@ router.post('/login', async (req, res) => {
     { user_id: user.user_id, role: user.role },
     process.env.JWT_SECRET
   );
-  res
-    .status(200)
-    .header('Authorization', token)
-    .send(_.pick(user, ['name', 'email']));
+  res.send(token);
 });
