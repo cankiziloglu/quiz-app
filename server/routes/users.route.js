@@ -2,20 +2,25 @@ const express = require('express');
 const _ = require('lodash');
 const prisma = require('../prisma/Client');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
+const auth = require('../middleware/auth');
+const admin = require('../middleware/admin');
+const { validateSignup, validateLogin } = require('../models/users.model');
 
 const router = express.Router();
 
 // /api/users
 // Get all users (admin only)
-router.get('/', async (req, res) => {
-  // TODO: Add authentication and admin middleware here
+router.get('/', auth, admin, async (req, res) => {
   const users = await prisma.user.findMany();
   res.json(users);
 });
 
 // Register a new user
-router.post('/', async (req, res) => {
-  // TODO: Add error handling after validation is done
+router.post('/signup', async (req, res) => {
+  const { error } = validateSignup(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
 
   const checkUser = await prisma.user.findUnique({
     where: { email: req.body.email },
@@ -28,13 +33,19 @@ router.post('/', async (req, res) => {
   const user = await prisma.user.create({
     data: { ...data },
   });
-  res.json(user);
+  const token = jwt.sign(
+    { user_id: user.user_id, role: user.role },
+    process.env.JWT_SECRET
+  );
+  res
+    .status(201)
+    .header('Authorization', token)
+    .send(_.pick(user, ['name', 'email']));
 });
 
 // /api/users/me
 // Get the profile of the logged-in user
-router.get('/me', async (req, res) => {
-  // TODO: Add authentication middleware here
+router.get('/me', auth, async (req, res) => {
   const user = await prisma.user.findUnique({
     where: {
       user_id: req.user.user_id,
@@ -44,9 +55,9 @@ router.get('/me', async (req, res) => {
 });
 
 // Update the profile of the logged-in user
-router.put('/me', async (req, res) => {
-  // TODO: Add authentication middleware here
-  // TODO: Add error handling after validation is done
+router.put('/me', auth, async (req, res) => {
+  const { error } = validateSignup(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
 
   const checkUser = await prisma.user.findUnique({
     where: { email: req.body.email },
@@ -65,22 +76,10 @@ router.put('/me', async (req, res) => {
     });
     res.json(updatedUser);
   }
-
-  if (!req.body.password) {
-    const data = _.pick(req.body, ['email', 'name']);
-    const updatedUser = await prisma.user.update({
-      where: {
-        user_id: req.user.user_id,
-      },
-      data: { ...data },
-    });
-    res.json(updatedUser);
-  }
 });
 
 // Get user profile by ID (admin only)
-router.get('/:user_id', async (req, res) => {
-  // TODO: Add authentication and admin middleware here
+router.get('/:user_id', auth, admin, async (req, res) => {
   const user = await prisma.user.findUnique({
     where: {
       user_id: parseInt(req.params.user_id),
@@ -90,8 +89,7 @@ router.get('/:user_id', async (req, res) => {
 });
 
 // Delete user by ID (admin only)
-router.delete('/:user_id', async (req, res) => {
-  // TODO: Add authentication and admin middleware here
+router.delete('/:user_id', auth, admin, async (req, res) => {
   const user = await prisma.user.delete({
     where: {
       user_id: parseInt(req.params.user_id),
@@ -101,3 +99,26 @@ router.delete('/:user_id', async (req, res) => {
 });
 
 module.exports = router;
+
+// Login a user
+router.post('/login', async (req, res) => {
+  const { error } = validateLogin(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
+
+  const user = await prisma.user.findUnique({
+    where: { email: req.body.email },
+  });
+  if (!user) return res.status(400).send('Invalid email or password.');
+
+  const validPassword = await bcrypt.compare(req.body.password, user.password);
+  if (!validPassword) return res.status(400).send('Invalid email or password.');
+
+  const token = jwt.sign(
+    { user_id: user.user_id, role: user.role },
+    process.env.JWT_SECRET
+  );
+  res
+    .status(200)
+    .header('Authorization', token)
+    .send(_.pick(user, ['name', 'email']));
+});
