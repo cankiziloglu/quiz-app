@@ -9,8 +9,12 @@ const users = require('./routes/users.route');
 const results = require('./routes/attempts.route');
 const questions = require('./routes/questions.route');
 
-
 const app = express();
+
+if (!process.env.JWT_SECRET) {
+  console.error('FATAL ERROR: JWT_SECRET is not defined.');
+  process.exit(1);
+}
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
