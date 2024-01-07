@@ -21,8 +21,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
 app.use('/api/quizzes', quizzes);
 app.use('/api/users', users);
-app.use('/api/attempts', attempts);
-app.use('/api/questions', questions);
+app.use('/api/attempt', attempts);
+app.use('/api/quizzes/:quiz_id/questions', questions);
 app.use(error);
 
 if (app.get('env') === 'development') {
