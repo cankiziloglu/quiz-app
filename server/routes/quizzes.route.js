@@ -27,6 +27,7 @@ router.post('/', auth, admin, async (req, res) => {
     'description',
     'duration',
     'question_count',
+    'tags',
   ]);
   const quiz = await prisma.quiz.create({
     data: {
@@ -34,6 +35,7 @@ router.post('/', auth, admin, async (req, res) => {
       description: data.description,
       duration: data.duration,
       question_count: data.question_count,
+      tags: data.tags,
     },
   });
   res.status(201).json(quiz);
@@ -67,6 +69,7 @@ router.put('/:quiz_id', auth, admin, async (req, res) => {
     'description',
     'duration',
     'question_count',
+    'tags',
   ]);
   const quiz = await prisma.quiz.update({
     where: {
@@ -77,6 +80,7 @@ router.put('/:quiz_id', auth, admin, async (req, res) => {
       description: data.description,
       duration: data.duration,
       question_count: data.question_count,
+      tags: data.tags,
     },
   });
   if (!quiz) return res.status(404).send('Quiz not found.');
