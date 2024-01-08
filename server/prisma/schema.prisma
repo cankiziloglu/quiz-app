@@ -27,6 +27,7 @@ model Quiz {
   description    String?
   question_count Int
   duration       Int
+  tags           String[]
   questions      Question[]
   quizAttempts   QuizAttempt[]
   created_at     DateTime      @default(now())
