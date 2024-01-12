@@ -1,11 +1,9 @@
-import { Heading, Text, Theme } from '@radix-ui/themes';
-
 function App() {
   return (
-    <Theme>
-      <Heading size='8'>Hello world</Heading>
-      <Text as='p'>This is Can</Text>
-    </Theme>
+    <>
+      <h1>Hello world</h1>
+      <p>This is Can</p>
+    </>
   );
 }
 

@@ -1,14 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@300;400;500;700&family=Press+Start+2P&display=swap');
-@import './theme-config.css';
 
-@layer tw_base, radix_ui, tw_components_utilities;
-
-@import '@radix-ui/themes/styles.css' layer(radix_ui);
-
-@layer tw_base {
-  @tailwind base;
-}
-@layer tw_components_utilities {
-  @tailwind components;
-  @tailwind utilities;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
