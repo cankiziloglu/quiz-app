@@ -4,13 +4,17 @@ import { Link } from 'react-router-dom';
 
 const NavBar = () => {
   return (
-    <nav>
-      <h1 className='font-display'>Quiz-App</h1>
-      <div>
-        <Link to='/login'>
-          <AvatarIcon />
+    <nav className='flex justify-between'>
+      <Link to='/' className='py-2'>
+        <h1 className='font-display text-2xl'>Quiz App</h1>
+      </Link>
+      <div className='flex'>
+        <Link to='/login' className='p-2'>
+          <AvatarIcon className='size-9' />
         </Link>
-        <ModeToggle />
+        <div className='py-2'>
+          <ModeToggle />
+        </div>
       </div>
     </nav>
   );
