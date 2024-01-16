@@ -3,12 +3,11 @@ import quizChallengeImage from '../assets/quiz-challenge.png';
 
 function Home() {
   return (
-    <div className='flex flex-col sm:flex-row items-center justify-center h-fit'>
-      <img
-        src={quizChallengeImage}
-        className='w-full max-w-lg h-auto sm:px-3'
-      />
-      <div className='sm:px-3'>
+    <div className='grid grid-cols-1 grid-rows-2 sm:grid-cols-2 sm:grid-rows-1'>
+      <div>
+        <img className='mx-auto' src={quizChallengeImage} />
+      </div>
+      <div>
         <QuizPicker />
       </div>
     </div>
