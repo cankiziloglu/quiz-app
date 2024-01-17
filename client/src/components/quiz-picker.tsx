@@ -17,7 +17,7 @@ import {
 
 const QuizPicker = () => {
   return (
-    <Card className='w-full md:w-1/2 mx-auto h-max'>
+    <Card className='w-full md:w-1/2 mx-auto'>
       <CardHeader>
         <CardTitle className='text-2xl'>Pick Your Challenge</CardTitle>
         <CardDescription className='text-xl'>

@@ -3,9 +3,9 @@ import quizChallengeImage from '../assets/quiz-challenge.png';
 
 function Home() {
   return (
-    <main className='flex flex-col md:flex-row flex-grow overflow-auto gap-6 justify-center place-items-center'>
+    <main className='flex flex-col md:flex-row flex-grow overflow-auto gap-6 justify-center place-items-center mx-auto max-w-screen-lg'>
       <img
-        className='w-full md:w-1/2 h-auto md:mx-h-60vh object-contain mx-auto'
+        className='w-full md:w-1/2 h-auto md:max-h-60vh object-contain mx-auto'
         src={quizChallengeImage}
       />
 
