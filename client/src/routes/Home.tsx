@@ -3,14 +3,14 @@ import quizChallengeImage from '../assets/quiz-challenge.png';
 
 function Home() {
   return (
-    <div className='grid grid-cols-1 grid-rows-2 sm:grid-cols-2 sm:grid-rows-1'>
-      <div>
-        <img className='mx-auto' src={quizChallengeImage} />
-      </div>
-      <div>
-        <QuizPicker />
-      </div>
-    </div>
+    <main className='flex flex-col md:flex-row flex-grow overflow-auto gap-6 justify-center place-items-center'>
+      <img
+        className='w-full md:w-1/2 h-auto md:mx-h-60vh object-contain mx-auto'
+        src={quizChallengeImage}
+      />
+
+      <QuizPicker />
+    </main>
   );
 }
 

@@ -10,12 +10,10 @@ const Layout = () => {
       <ThemeProvider defaultTheme='dark' storageKey='vite-ui-theme'>
         <div
           id='container'
-          className='flex flex-col justify-between h-dvh w-dvw mx-auto p-3 gap-4 max-w-screen-md'
+          className='flex flex-col h-screen w-screen mx-auto p-3 gap-4 overflow-hidden'
         >
           <NavBar />
-          <main>
-            <Outlet />
-          </main>
+          <Outlet />
           <Footer />
         </div>
       </ThemeProvider>

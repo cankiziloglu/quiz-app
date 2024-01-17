@@ -9,7 +9,7 @@ import {
 const Footer = () => {
   return (
     <>
-      <footer>
+      <footer className='flex-shrink-0'>
         <Separator />
         <div className='flex flex-col sm:flex-row sm:justify-between justify-center items-center p-4'>
           <small>

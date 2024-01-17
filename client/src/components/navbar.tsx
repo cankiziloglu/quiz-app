@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 const NavBar = () => {
   return (
-    <nav className='flex justify-between'>
+    <nav className='flex-shrink-0 flex justify-between'>
       <Link to='/' className='py-2'>
         <h1 className='font-display text-2xl'>Quiz App</h1>
       </Link>
