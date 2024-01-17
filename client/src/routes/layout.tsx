@@ -13,7 +13,9 @@ const Layout = () => {
           className='flex flex-col h-screen w-screen mx-auto p-3 gap-4 overflow-hidden'
         >
           <NavBar />
-          <Outlet />
+          <main className='flex flex-grow overflow-auto justify-center items-center w-full h-full'>
+            <Outlet />
+          </main>
           <Footer />
         </div>
       </ThemeProvider>

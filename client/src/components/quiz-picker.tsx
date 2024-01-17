@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import { Button } from './ui/button';
 import {
   Card,
@@ -16,6 +17,8 @@ import {
 } from './ui/select';
 
 const QuizPicker = () => {
+  const navigate = useNavigate();
+
   return (
     <Card className='w-full md:w-1/2 mx-auto'>
       <CardHeader>
@@ -39,7 +42,11 @@ const QuizPicker = () => {
         </Select>
       </CardContent>
       <CardFooter>
-        <Button size='lg' className='mx-auto text-lg'>
+        <Button
+          size='lg'
+          className='mx-auto text-lg'
+          onClick={() => navigate('/quiz')}
+        >
           Start
         </Button>
       </CardFooter>

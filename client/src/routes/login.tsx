@@ -3,13 +3,13 @@ import quizChallengeImage from '../assets/quiz-challenge.png';
 
 const Login = () => {
   return (
-    <main className='flex flex-col md:flex-row flex-grow overflow-auto gap-6 justify-center place-items-center max-w-screen-lg mx-auto'>
+    <div className='flex flex-col md:flex-row flex-grow overflow-auto gap-6 justify-center place-items-center max-w-screen-lg mx-auto'>
       <img
-        className='w-full md:w-1/2 h-auto md:max-h-60vh object-contain mx-auto'
+        className='w-full md:w-1/2 h-auto max-h-[50vh] object-contain mx-auto'
         src={quizChallengeImage}
       />
       <LoginForm />
-    </main>
+    </div>
   );
 };
 

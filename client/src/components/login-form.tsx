@@ -99,6 +99,7 @@ const LoginForm = () => {
           <Button type='submit' size='lg' className='mx-auto'>
             Login
           </Button>
+          {/* TODO: Disable button */}
         </form>
       </CardContent>
       <CardFooter>

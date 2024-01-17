@@ -54,7 +54,10 @@ const SignupForm = () => {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col justify-center'>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className='flex flex-col justify-center'
+        >
           <div className='mb-2'>
             <Label htmlFor='name'>Name</Label>
             <Input type='text' id='name' {...register('name')} />
@@ -104,8 +107,9 @@ const SignupForm = () => {
             )}
           </div>
           <Button type='submit' size='lg' className='mx-auto'>
-            Signup
+            Sign up
           </Button>
+          {/* TODO: Disable button */}
         </form>
       </CardContent>
       <CardFooter>
