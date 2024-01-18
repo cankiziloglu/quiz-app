@@ -2,6 +2,7 @@ const express = require('express');
 require('dotenv').config();
 const helmet = require('helmet');
 const morgan = require('morgan');
+const cors = require('cors');
 require('express-async-errors');
 const error = require('./middleware/error');
 const quizzes = require('./routes/quizzes.route');
@@ -19,6 +20,7 @@ if (!process.env.JWT_SECRET) {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
+app.use(cors());
 app.use('/api/quizzes', quizzes);
 app.use('/api/users', users);
 app.use('/api/attempt', attempts);
