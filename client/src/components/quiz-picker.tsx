@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from './ui/button';
 import {
@@ -15,9 +16,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from './ui/select';
+import useQuizzes from '@/hooks/useQuizzes';
 
 const QuizPicker = () => {
   const navigate = useNavigate();
+  const [quizId, setQuizId] = useState<string>('');
+
+  const { data: quizzes, error } = useQuizzes();
+
+  if (error) {
+    console.error(error);
+  }
 
   return (
     <Card className='w-full md:w-1/2 mx-auto'>
@@ -28,16 +37,23 @@ const QuizPicker = () => {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Select>
+        <Select
+          value={quizId}
+          onValueChange={(value) => {
+            setQuizId(value);
+            console.log(value);
+          }}
+        >
           <SelectTrigger id='quiz'>
             <SelectValue placeholder='Select a Quiz' />
           </SelectTrigger>
           <SelectContent position='popper'>
-            {/* TODO: Iterate over quizzes and display here */}
-            <SelectItem value='next'>Next.js</SelectItem>
-            <SelectItem value='sveltekit'>SvelteKit</SelectItem>
-            <SelectItem value='astro'>Astro</SelectItem>
-            <SelectItem value='nuxt'>Nuxt.js</SelectItem>
+            {quizzes &&
+              quizzes.map((quiz) => (
+                <SelectItem key={quiz.quiz_id} value={quiz.quiz_id}>
+                  {quiz.title}
+                </SelectItem>
+              ))}
           </SelectContent>
         </Select>
       </CardContent>
