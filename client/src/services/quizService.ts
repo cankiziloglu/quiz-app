@@ -6,7 +6,7 @@ export type Quiz = {
   //   question_count: Joi.number().integer().min(1).required(),
   //   duration: Joi.number().integer().min(1).required(),
   //   tags: Joi.array().items(Joi.string()),
-  id: number;
+  quiz_id: string;
   title: string;
   description: string;
   question_count: number;

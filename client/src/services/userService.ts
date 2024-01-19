@@ -1,7 +1,7 @@
 import APIClient from './api-client';
 
 export type User = {
-  id: number;
+  user_id: string;
   name: string;
   email: string;
   password: string;

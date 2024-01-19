@@ -10,13 +10,13 @@ export type Question = {
   //       })
   //     )
 
-  id: number;
+  question_id: string;
   content: string;
   answers: Answer[];
 };
 
 export type Answer = {
-  id: number;
+  answer_id: string;
   content: string;
   is_correct: boolean;
 };

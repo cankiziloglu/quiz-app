@@ -12,9 +12,9 @@ export type Attempt = {
   //       })
   //     )
 
-  id: number;
-  quiz_id: number;
-  user_id: number;
+  attempt_id: string;
+  quiz_id: string;
+  user_id: string;
   answers: UserAnswer[];
   created_at: string;
   updated_at: string;
@@ -23,10 +23,10 @@ export type Attempt = {
 };
 
 export type UserAnswer = {
-  id: number;
-  attempt_id: number;
-  question_id: number;
-  answer_id: number;
+  user_answer_id: string;
+  attempt_id: string;
+  question_id: string;
+  answer_id: string;
   created_at: string;
 };
 
