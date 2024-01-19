@@ -9,7 +9,7 @@ const router = express.Router();
 
 //  /api/quizzes
 // List all quizzes to authenticated users only.
-router.get('/', auth, async (req, res) => {
+router.get('/', async (req, res) => {
   const quizzes = await prisma.quiz.findMany({
     orderBy: {
       title: 'asc',

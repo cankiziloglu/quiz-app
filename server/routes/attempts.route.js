@@ -82,6 +82,8 @@ router.get('/me', auth, async (req, res) => {
   res.json(attempts);
 });
 
+// TODO: Get an attempt of a user '/me/:attempt_id' including questions and answers
+
 //Get all attempts of a quiz or user
 router.get('/', auth, admin, async (req, res) => {
   let query = {};
@@ -97,7 +99,7 @@ router.get('/', auth, admin, async (req, res) => {
   const attempts = await prisma.quizAttempt.findMany({
     where: { ...query },
     include: {
-      userAnswers: true,
+      userAnswers: true,  // TODO: do we need to include answers?
     },
     orderBy: {
       attempt_id: 'desc',
@@ -113,7 +115,7 @@ router.get('/:attempt_id', auth, admin, async (req, res) => {
       attempt_id: parseInt(req.params.attempt_id),
     },
     include: {
-      userAnswers: true,
+      userAnswers: true,  // TODO: include questions 
     },
   });
   if (!attempt) return res.status(404).send('Attempt not found.');
