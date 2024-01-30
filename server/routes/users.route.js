@@ -43,8 +43,11 @@ router.post('/signup', async (req, res) => {
   );
   res
     .status(201)
-    .header('Authorization', token)
-    .send(_.pick(user, ['user_id', 'name', 'email']));
+    .cookie('token', token, {
+      httpOnly: true,
+      secure: true,
+    })
+    .send(_.pick(user, ['user_id', 'name', 'email']), token);
 });
 
 // /api/users/me
@@ -55,7 +58,16 @@ router.get('/me', auth, async (req, res) => {
       user_id: req.user.user_id,
     },
   });
-  res.send(_.pick(user, ['user_id', 'name', 'email']));
+  res.send(
+    _.pick(user, [
+      'user_id',
+      'name',
+      'email',
+      'role',
+      'created_at',
+      'updated_at',
+    ])
+  );
 });
 
 // Update the profile of the logged-in user
@@ -140,5 +152,11 @@ router.post('/login', async (req, res) => {
     { user_id: user.user_id, role: user.role },
     process.env.JWT_SECRET
   );
-  res.send(token);
+
+  res
+    .cookie('token', token, {
+      httpOnly: true,
+      secure: true,
+    })
+    .send(_.pick(user, ['user_id', 'name', 'email']), token);
 });
