@@ -47,7 +47,7 @@ router.post('/signup', async (req, res) => {
       httpOnly: true,
       secure: true,
     })
-    .send(_.pick(user, ['user_id', 'name', 'email']), token);
+    .send(_.pick(user, ['user_id', 'name', 'email', 'role']), token);
 });
 
 // /api/users/me
@@ -158,5 +158,5 @@ router.post('/login', async (req, res) => {
       httpOnly: true,
       secure: true,
     })
-    .send(_.pick(user, ['user_id', 'name', 'email']), token);
+    .send(_.pick(user, ['user_id', 'name', 'email', 'role']), token);
 });
