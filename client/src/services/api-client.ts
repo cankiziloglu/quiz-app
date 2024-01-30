@@ -1,7 +1,12 @@
 import axios from 'axios';
 
+
+
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:3000/api',
+  baseURL: 'api',
+  headers: {
+    'Authorization': ''
+  }
 }); // create an axios instance
 
 class APIClient<T> {
@@ -14,7 +19,7 @@ class APIClient<T> {
   getAll = () => {
     return axiosInstance
       .get<T[]>(this.endpoint)
-      .then((response) => response.data);
+      .then((response) => response.data)
   };
 
   getOne = (id: string) => {

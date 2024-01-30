@@ -41,13 +41,23 @@ router.post('/signup', async (req, res) => {
     { user_id: user.user_id, role: user.role },
     process.env.JWT_SECRET
   );
+
+  const resp = _.pick(user, ['user_id', 'name', 'email', 'role']);
+
   res
     .status(201)
     .cookie('token', token, {
       httpOnly: true,
       secure: true,
     })
-    .send(_.pick(user, ['user_id', 'name', 'email', 'role']), token);
+    .cookie(
+      'user',
+      JSON.stringify(_.pick(user, ['user_id', 'name', 'email', 'role'])),
+      {
+        httpOnly: true,
+      }
+    )
+    .send({ token, ...resp });
 });
 
 // /api/users/me
@@ -153,10 +163,19 @@ router.post('/login', async (req, res) => {
     process.env.JWT_SECRET
   );
 
+  const resp = _.pick(user, ['user_id', 'name', 'email', 'role']);
+
   res
     .cookie('token', token, {
       httpOnly: true,
       secure: true,
     })
-    .send(_.pick(user, ['user_id', 'name', 'email', 'role']), token);
+    .cookie(
+      'user',
+      JSON.stringify(_.pick(user, ['user_id', 'name', 'email', 'role'])),
+      {
+        httpOnly: true,
+      }
+    )
+    .send({ token, ...resp });
 });

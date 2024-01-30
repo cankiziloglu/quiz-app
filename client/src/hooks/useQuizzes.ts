@@ -1,4 +1,4 @@
-import quizService, { Quiz } from '@/services/quizService';
+import quizService, { Quiz } from '@/services/quizUtil';
 import { useQuery } from '@tanstack/react-query';
 
 const useQuizzes = () => {

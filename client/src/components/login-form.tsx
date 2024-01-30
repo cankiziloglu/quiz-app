@@ -14,11 +14,14 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import * as z from 'zod';
-import { useForm } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Label } from './ui/label';
 import { Input } from './ui/input';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
+import { AuthContext } from '@/context/auth-context';
+import useLogin from '@/hooks/useLogin';
 
 const LoginForm = () => {
   const LoginSchema = z.object({
@@ -40,9 +43,23 @@ const LoginForm = () => {
     defaultValues: { email: '', password: '' },
   });
 
-  function onSubmit(data: LoginSchemaType) {
-    console.log(data);
-  }
+  const login = useLogin();
+
+  const auth = useContext(AuthContext);
+
+  const navigate = useNavigate();
+
+  const onSubmit: SubmitHandler<LoginSchemaType> = (userInfo) => {
+    login.mutate(userInfo, {
+      onSuccess: (data) => {
+        auth?.setAuthState(data);
+        navigate('/');
+      },
+      onError: (error) => {
+        console.log(error);
+      },
+    });
+  };
 
   return (
     <Card className='w-full md:w-1/2 mx-auto'>

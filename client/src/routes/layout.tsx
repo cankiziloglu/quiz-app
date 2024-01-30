@@ -2,7 +2,7 @@
 import { Outlet } from 'react-router-dom';
 import NavBar from '../components/navbar';
 import Footer from '../components/footer';
-import { ThemeProvider } from '@/components/theme-provider';
+import { ThemeProvider } from '@/context/theme-provider';
 
 const Layout = () => {
   return (

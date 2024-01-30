@@ -14,11 +14,14 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import * as z from 'zod';
-import { useForm } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Label } from './ui/label';
 import { Input } from './ui/input';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { AuthContext } from '@/context/auth-context';
+import useSignup from '@/hooks/useSignup';
+import { useContext } from 'react';
 
 const SignupForm = () => {
   const SignupSchema = z.object({
@@ -41,9 +44,23 @@ const SignupForm = () => {
     defaultValues: { email: '', password: '' },
   });
 
-  function onSubmit(data: SignupSchemaType) {
-    console.log(data);
-  }
+  const postSignup = useSignup();
+
+  const auth = useContext(AuthContext);
+
+  const navigate = useNavigate();
+
+  const onSubmit: SubmitHandler<SignupSchemaType> = (userInfo) => {
+    postSignup.mutate(userInfo, {
+      onSuccess: (data) => {
+        auth?.setAuthState(data);
+        navigate('/');
+      },
+      onError: (error) => {
+        console.log(error);
+      },
+    });
+  };
 
   return (
     <Card className='w-full md:w-1/2 mx-auto'>
@@ -109,7 +126,6 @@ const SignupForm = () => {
           <Button type='submit' size='lg' className='mx-auto'>
             Sign up
           </Button>
-          {/* TODO: Disable button */}
         </form>
       </CardContent>
       <CardFooter>
