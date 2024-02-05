@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from './ui/button';
 import {
@@ -17,6 +17,7 @@ import {
   SelectValue,
 } from './ui/select';
 import useQuizzes from '@/hooks/useQuizzes';
+import { AuthContext } from '@/context/auth-context';
 
 const QuizPicker = () => {
   const navigate = useNavigate();
@@ -27,6 +28,17 @@ const QuizPicker = () => {
   if (error) {
     console.error(error);
   }
+
+  const auth = useContext(AuthContext);
+
+  const handleClick = (quizId: string) => {
+    // TODO: Adjust enpoint to navigate to quiz
+    if (auth?.authState?.name) {
+      navigate(`/quiz/${quizId}`);
+    } else {
+      navigate('/login');
+    }
+  };
 
   return (
     <Card className='w-full md:w-1/2 mx-auto'>
@@ -61,7 +73,7 @@ const QuizPicker = () => {
         <Button
           size='lg'
           className='mx-auto text-lg'
-          onClick={() => navigate('/quiz')}
+          onClick={() => handleClick(quizId)}
         >
           Start
         </Button>
