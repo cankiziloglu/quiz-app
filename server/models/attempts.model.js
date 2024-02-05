@@ -23,7 +23,18 @@ function submitAttempt(attempt) {
   return schema.validate(attempt);
 }
 
+function shuffleQuestions(questions, questionCount) {
+  
+  for (let i = questions.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [questions[i], questions[j]] = [questions[j], questions[i]];
+  }
+  questions = questions.slice(0, questionCount);
+  return questions;
+}
+
 module.exports = {
   startAttempt,
   submitAttempt,
+  shuffleQuestions,
 };

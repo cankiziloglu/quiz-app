@@ -1,7 +1,7 @@
 const express = require('express');
 const auth = require('../middleware/auth');
 const admin = require('../middleware/admin');
-const { startAttempt, submitAttempt } = require('../models/attempts.model');
+const { startAttempt, submitAttempt, shuffleQuestions } = require('../models/attempts.model');
 const prisma = require('../prisma/Client');
 
 const router = express.Router();
@@ -44,6 +44,8 @@ router.post('/', auth, async (req, res) => {
     },
   });
 
+  const shuffledQuestions = shuffleQuestions(questions, questionCount.question_count);
+
   const attempt = await prisma.quizAttempt.create({
     data: {
       quiz: {
@@ -60,7 +62,7 @@ router.post('/', auth, async (req, res) => {
     },
   });
 
-  res.status(201).json({ attempt, questions });
+  res.status(201).json({ attempt, shuffledQuestions });
 });
 
 module.exports = router;
