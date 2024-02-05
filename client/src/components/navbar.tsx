@@ -1,6 +1,6 @@
 import { ModeToggle } from '@/components/mode-toggle';
-import { AvatarIcon } from '@radix-ui/react-icons';
 import { Link } from 'react-router-dom';
+import { UserToggle } from './user-toggle';
 
 const NavBar = () => {
   return (
@@ -9,10 +9,10 @@ const NavBar = () => {
         <h1 className='font-display text-2xl'>Quiz App</h1>
       </Link>
       <div className='flex'>
-        <Link to='/login' className='p-2'>
-          <AvatarIcon className='size-9' />
-        </Link>
-        <div className='py-2'>
+      <div className='py-2 px-2'>
+          <UserToggle />
+        </div>
+        <div className='py-2 px-2'>
           <ModeToggle />
         </div>
       </div>
