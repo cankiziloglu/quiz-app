@@ -84,7 +84,12 @@ const LoginForm = () => {
         >
           <div className='mb-2'>
             <Label htmlFor='email'>Email</Label>
-            <Input type='email' id='email' {...register('email')} />
+            <Input
+              type='email'
+              id='email'
+              {...register('email')}
+              autoComplete='email'
+            />
             {errors.email && (
               <span className='text-red-500 text-sm'>
                 {errors.email.message}
@@ -100,6 +105,7 @@ const LoginForm = () => {
                     type='password'
                     id='password'
                     {...register('password')}
+                    autoComplete='current-password'
                   />
                 </TooltipTrigger>
                 <TooltipContent>
