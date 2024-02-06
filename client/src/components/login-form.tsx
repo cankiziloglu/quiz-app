@@ -125,7 +125,7 @@ const LoginForm = () => {
             Login
           </Button>
           {authError && (
-            <span className='text-red-500 mx-auto mt-2 text-center'>
+            <span className='text-red-500 mx-auto mt-2 text-sm text-center'>
               {authError}
             </span>
           )}
