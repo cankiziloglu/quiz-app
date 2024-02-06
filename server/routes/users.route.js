@@ -143,8 +143,6 @@ router.delete('/:user_id', auth, admin, async (req, res) => {
   res.send(_.pick(user, ['user_id', 'name', 'email']));
 });
 
-module.exports = router;
-
 // Login a user
 router.post('/login', async (req, res) => {
   const { error } = validateLogin(req.body);
@@ -179,3 +177,9 @@ router.post('/login', async (req, res) => {
     )
     .send({ token, ...resp });
 });
+
+router.post('/logout', (req, res) => {
+  res.clearCookie('token').clearCookie('user').send('Logged out.');
+});
+
+module.exports = router;

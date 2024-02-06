@@ -1,6 +1,7 @@
 import { createContext, useState } from 'react';
 import Cookies from 'js-cookie';
 import { UserType } from '@/services/userUtil';
+import useLogout from '@/hooks/useLogout';
 
 type AuthContextType = {
   authState: UserType | null;
@@ -18,6 +19,8 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     ? JSON.parse(Cookies.get('user') as string)
     : undefined;
 
+  const logoutCall = useLogout();
+
   const [authState, setAuthState] = useState<UserType>({
     token: token ? token : '',
     user_id: user ? user.user_id : '',
@@ -31,6 +34,16 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const logout = () => {
+    logoutCall.mutate(authState, {
+      onSuccess: (response) => {
+        Cookies.remove('token');
+        Cookies.remove('user');
+        console.log(response);
+      },
+      onError: (error) => {
+        console.error(error);
+      },
+    });
     setAuthState({
       token: undefined,
       user_id: undefined,
@@ -38,8 +51,6 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
       email: '',
       role: undefined,
     });
-    Cookies.remove('token');
-    Cookies.remove('user');
   };
 
   return (

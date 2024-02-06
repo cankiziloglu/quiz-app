@@ -15,3 +15,4 @@ export const usersUtil = new APIClient<UserType>('/users');
 export const loginUtil = new APIClient<UserType>('/users/login');
 export const signupUtil = new APIClient<UserType>('/users/signup');
 export const meUtil = new APIClient<UserType>('/users/me');
+export const logoutUtil = new APIClient<UserType>('/users/logout');
