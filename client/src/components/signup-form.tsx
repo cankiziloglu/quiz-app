@@ -25,6 +25,7 @@ import { useContext, useState } from 'react';
 import axios from 'axios';
 
 const SignupForm = () => {
+  
   const SignupSchema = z.object({
     name: z.string().min(2, { message: 'Must be at least 2 characters long' }),
     email: z.string().email({ message: 'Invalid email address' }),
@@ -85,7 +86,7 @@ const SignupForm = () => {
         >
           <div className='mb-2'>
             <Label htmlFor='name'>Name</Label>
-            <Input type='text' id='name' {...register('name')} />
+            <Input type='text' id='name' {...register('name')} autoComplete='name' />
             {errors.name && (
               <span className='text-red-500 text-sm'>
                 {errors.name.message}
@@ -94,7 +95,7 @@ const SignupForm = () => {
           </div>
           <div className='mb-2'>
             <Label htmlFor='email'>Email</Label>
-            <Input type='email' id='email' {...register('email')} />
+            <Input type='email' id='email' {...register('email')} autoComplete='email'/>
             {errors.email && (
               <span className='text-red-500 text-sm'>
                 {errors.email.message}
@@ -110,6 +111,7 @@ const SignupForm = () => {
                     type='password'
                     id='password'
                     {...register('password')}
+                    autoComplete='new-password'
                   />
                 </TooltipTrigger>
                 <TooltipContent>
