@@ -18,6 +18,7 @@ import {
 } from './ui/select';
 import useQuizzes from '@/hooks/useQuizzes';
 import { AuthContext } from '@/context/auth-context';
+import useAttempt from '@/hooks/useAttempt';
 
 const QuizPicker = () => {
   const navigate = useNavigate();
@@ -30,11 +31,17 @@ const QuizPicker = () => {
   }
 
   const auth = useContext(AuthContext);
-
+  const attempt = useAttempt();
   const handleClick = (quizId: string) => {
-    // TODO: Adjust enpoint to navigate to quiz
     if (auth?.authState?.name) {
-      navigate(`/quiz/${quizId}`);
+      attempt.mutate(quizId, {
+        onSuccess: (response) => {
+          console.log(response);
+        },
+        onError: (error) => {
+          console.error(error);
+        },
+      });
     } else {
       navigate('/login');
     }

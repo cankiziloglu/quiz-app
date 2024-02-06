@@ -8,7 +8,7 @@ const router = express.Router();
 
 // Start a new attempt
 router.post('/', auth, async (req, res) => {
-  const quiz_id = parseInt(req.query.quiz_id);
+  const quiz_id = parseInt(req.body.quiz_id);
   const user_id = parseInt(req.user.user_id);
 
   const { error } = startAttempt({ quiz_id, user_id });
@@ -65,7 +65,7 @@ router.post('/', auth, async (req, res) => {
   res.status(201).json({ attempt, shuffledQuestions });
 });
 
-module.exports = router;
+
 
 //Get all attempts of user
 router.get('/me', auth, async (req, res) => {
