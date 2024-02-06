@@ -33,6 +33,16 @@ export function UserToggle() {
           </DropdownMenuItem>
         </DropdownMenuContent>
       )}
+      {auth?.authState?.name && (
+        <DropdownMenuContent align='end'>
+          <DropdownMenuItem onClick={() => navigate('/me')}>
+            Account
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => auth?.logout()}>
+            Logout
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      )}
     </DropdownMenu>
   );
 }
