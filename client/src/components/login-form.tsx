@@ -19,9 +19,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Label } from './ui/label';
 import { Input } from './ui/input';
 import { Link, useNavigate } from 'react-router-dom';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { AuthContext } from '@/context/auth-context';
 import useLogin from '@/hooks/useLogin';
+import axios from 'axios';
 
 const LoginForm = () => {
   const LoginSchema = z.object({
@@ -49,14 +50,21 @@ const LoginForm = () => {
 
   const navigate = useNavigate();
 
+  const [authError, setAuthError] = useState<string | null>(null);
+
   const onSubmit: SubmitHandler<LoginSchemaType> = (userInfo) => {
     login.mutate(userInfo, {
       onSuccess: (data) => {
         auth?.setAuthState(data);
         navigate('/');
       },
-      onError: (error) => {
-        console.log(error);
+      onError: (error: Error) => {
+        if (axios.isAxiosError(error)) {
+          setAuthError(error.response?.data);
+        } else {
+          // Handle generic error
+          setAuthError('An error occurred, please try again.');
+        }
       },
     });
   };
@@ -116,7 +124,11 @@ const LoginForm = () => {
           <Button type='submit' size='lg' className='mx-auto'>
             Login
           </Button>
-          {/* TODO: Disable button */}
+          {authError && (
+            <span className='text-red-500 mx-auto mt-2 text-center'>
+              {authError}
+            </span>
+          )}
         </form>
       </CardContent>
       <CardFooter>
