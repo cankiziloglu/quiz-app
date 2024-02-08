@@ -75,7 +75,6 @@ const QuizPicker = () => {
           value={quizId}
           onValueChange={(value) => {
             setQuizId(value);
-            console.log(value);
           }}
         >
           <SelectTrigger id='quiz'>
