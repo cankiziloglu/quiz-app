@@ -47,14 +47,17 @@ router.post('/signup', async (req, res) => {
   res
     .status(201)
     .cookie('token', token, {
-      httpOnly: true,
+      httpOnly: false,
       secure: true,
+      maxAge: 1000 * 60 * 60 * 24, // 1 day
     })
     .cookie(
       'user',
       JSON.stringify(_.pick(user, ['user_id', 'name', 'email', 'role'])),
       {
-        httpOnly: true,
+        httpOnly: false,
+        secure: true,
+        maxAge: 1000 * 60 * 60 * 24, // 1 day
       }
     )
     .send({ token, ...resp });
@@ -165,14 +168,17 @@ router.post('/login', async (req, res) => {
 
   res
     .cookie('token', token, {
-      httpOnly: true,
+      httpOnly: false,
       secure: true,
+      maxAge: 1000 * 60 * 60 * 24, // 1 day
     })
     .cookie(
       'user',
       JSON.stringify(_.pick(user, ['user_id', 'name', 'email', 'role'])),
       {
-        httpOnly: true,
+        httpOnly: false,
+        secure: true,
+        maxAge: 1000 * 60 * 60 * 24, // 1 day
       }
     )
     .send({ token, ...resp });
