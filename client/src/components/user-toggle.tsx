@@ -35,6 +35,11 @@ export function UserToggle() {
       )}
       {auth?.authState?.name && (
         <DropdownMenuContent align='end'>
+          {auth?.authState?.role === 'ADMIN' && (
+            <DropdownMenuItem onClick={() => navigate('/dashboard')}>
+              Dashboard
+            </DropdownMenuItem>
+          )}
           <DropdownMenuItem onClick={() => navigate('/me')}>
             Account
           </DropdownMenuItem>

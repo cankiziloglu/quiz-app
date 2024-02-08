@@ -6,7 +6,7 @@ import Login from './login';
 import Signup from './signup';
 import Quiz from './quiz';
 import PrivateRoutes from './private-routes';
-import Admin from './admin';
+import Dashboard from './admin';
 import Me from './me';
 
 const router = createBrowserRouter([
@@ -29,7 +29,7 @@ const router = createBrowserRouter([
         children: [
           { path: 'me', element: <Me /> },
           { path: 'quiz', element: <Quiz /> },
-          { path: 'admin', element: <Admin /> },
+          { path: 'dashboard', element: <Dashboard /> },
         ],
       },
     ],
