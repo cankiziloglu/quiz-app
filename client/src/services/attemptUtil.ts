@@ -1,3 +1,4 @@
+import { AttemptType } from "@/context/quiz-context";
 import APIClient from "./api-client";
 
 export type Attempt = {
@@ -19,7 +20,7 @@ export type Attempt = {
   created_at?: string;
   updated_at?: string;
   question_count?: number;
-  score?: number;
+  score?: number | null;
 };
 
 export type UserAnswer = {
@@ -30,4 +31,4 @@ export type UserAnswer = {
   created_at?: string;
 };
 
-export default new APIClient<Attempt>("/attempt");
+export default new APIClient<Attempt | AttemptType>("/attempt");

@@ -19,6 +19,9 @@ import {
 import useQuizzes from '@/hooks/useQuizzes';
 import { AuthContext } from '@/context/auth-context';
 import useAttempt from '@/hooks/useAttempt';
+import { QuizContext } from '@/context/quiz-context';
+import { Attempt } from '@/services/attemptUtil';
+import { Question } from '@/services/questionUtil';
 
 const QuizPicker = () => {
   const navigate = useNavigate();
@@ -30,18 +33,30 @@ const QuizPicker = () => {
     console.error(error);
   }
 
+  const quiz = useContext(QuizContext);
   const auth = useContext(AuthContext);
   const attempt = useAttempt();
   const handleClick = (quizId: string) => {
     if (auth?.authState?.name) {
-      attempt.mutate(quizId, {
-        onSuccess: (response) => {
-          console.log(response);
-        },
-        onError: (error) => {
-          console.error(error);
-        },
-      });
+      if (quiz?.attemptState?.quiz_id === quizId) {
+        navigate('/quiz');
+        return;
+      } else {
+        attempt.mutate(quizId, {
+          onSuccess: (response) => {
+            if ('attempt' in response) {
+              const attemptInfo: Attempt = response.attempt;
+              const questionsInfo: Question[] = response.shuffledQuestions;
+              quiz?.setAttemptInfo(attemptInfo);
+              quiz?.setQuestionsInfo(questionsInfo);
+              navigate('/quiz');
+            }
+          },
+          onError: (error) => {
+            console.error(error);
+          },
+        });
+      }
     } else {
       navigate('/login');
     }

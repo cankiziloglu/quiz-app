@@ -18,7 +18,7 @@ export type Question = {
 export type Answer = {
   answer_id: string;
   content: string;
-  is_correct: boolean;
+  is_correct?: boolean;
 };
 
 export default new APIClient<Question>('/quizzes/:quizId/questions');
