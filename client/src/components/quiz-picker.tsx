@@ -20,8 +20,8 @@ import useQuizzes from '@/hooks/useQuizzes';
 import { AuthContext } from '@/context/auth-context';
 import useAttempt from '@/hooks/useAttempt';
 import { QuizContext } from '@/context/quiz-context';
-import { Attempt } from '@/services/attemptUtil';
-import { Question } from '@/services/questionUtil';
+import { Attempt } from '@/lib/types';
+import { Question } from '@/lib/types';
 
 const QuizPicker = () => {
   const navigate = useNavigate();

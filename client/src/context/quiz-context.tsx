@@ -1,5 +1,5 @@
-import { Attempt, UserAnswer } from '@/services/attemptUtil';
-import { Question } from '@/services/questionUtil';
+import { Attempt, UserAnswer } from '@/lib/types';
+import { Question } from '@/lib/types';
 import { createContext, useState } from 'react';
 
 type QuizContextType = {
@@ -11,11 +11,6 @@ type QuizContextType = {
   setQuestionsInfo: (questionsInfo: Question[]) => void;
   clearLocalStorage: () => void;
 } | null;
-
-export type AttemptType = {
-  attempt: Attempt;
-  shuffledQuestions: Question[];
-}
 
 const QuizContext = createContext<QuizContextType>(null);
 
@@ -100,7 +95,8 @@ function QuizProvider({ children }: { children: React.ReactNode }) {
         questionsState,
         setAttemptInfo: (attemptInfo: Attempt) => setAttemptInfo(attemptInfo),
         setQuizInfo: (quizInfo: UserAnswer[]) => setQuizInfo(quizInfo),
-        setQuestionsInfo: (questionsInfo: Question[]) => setQuestionsInfo(questionsInfo),
+        setQuestionsInfo: (questionsInfo: Question[]) =>
+          setQuestionsInfo(questionsInfo),
         clearLocalStorage: () => clearLocalStorage(),
       }}
     >

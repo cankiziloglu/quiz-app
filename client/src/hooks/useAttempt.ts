@@ -1,10 +1,11 @@
-import attemptUtil from '@/services/attemptUtil';
 import { useMutation } from '@tanstack/react-query';
+import axios from 'axios';
+import { AttemptType } from '@/lib/types';
 
 const useAttempt = () => {
   return useMutation({
-    mutationFn: (quiz_id: string) => {
-      return attemptUtil.post({quiz_id});
+    mutationFn: async (quiz_id: string): Promise<AttemptType> => {
+      return await axios.post('/api/attempt', quiz_id).then((res) => res.data);
     },
   });
 };

@@ -1,6 +1,6 @@
 import { createContext, useState } from 'react';
 import Cookies from 'js-cookie';
-import { UserType } from '@/services/userUtil';
+import { UserType } from '@/lib/types';
 import useLogout from '@/hooks/useLogout';
 
 type AuthContextType = {

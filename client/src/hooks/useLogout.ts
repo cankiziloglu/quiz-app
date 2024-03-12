@@ -1,12 +1,15 @@
-import { UserType, logoutUtil } from '@/services/userUtil';
+import { UserType } from '@/lib/types';
 import { useMutation } from '@tanstack/react-query';
+import axios from 'axios';
 
 const useLogout = () => {
   return useMutation({
-    mutationFn: ({ email }: UserType) => {
-      return logoutUtil.post({
-        email: email,
-      });
+    mutationFn: async ({ email }: UserType): Promise<UserType> => {
+      return await axios
+        .post('/api/users/logout', {
+          email: email,
+        })
+        .then((res) => res.data);
     },
   });
 };
