@@ -67,7 +67,7 @@ const QuizPagination = ({
       {question !== 1 ? (
         <Button
           disabled={attempt.isPending}
-          variant='secondary'
+          variant='ghost'
           onClick={() => setQuestion(question - 1)}
         >
           <ChevronLeftIcon /> Previous
@@ -81,7 +81,7 @@ const QuizPagination = ({
       {question !== totalQuestions ? (
         <Button
           disabled={attempt.isPending}
-          variant='secondary'
+          variant='ghost'
           onClick={() => setQuestion(question + 1)}
         >
           Next <ChevronRightIcon />
