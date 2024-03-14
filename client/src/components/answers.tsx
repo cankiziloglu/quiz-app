@@ -49,7 +49,7 @@ const Answers = ({ question, quizState, setQuizInfo }: AnswerProps) => {
                 id={answer.answer_id}
               />
               <Label
-                className='font-normal text-md md:text-xl'
+                className='font-normal text-md md:text-xl w-full cursor-pointer'
                 htmlFor={answer.answer_id}
               >
                 {answer.content}
