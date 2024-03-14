@@ -7,12 +7,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { AuthContext } from '@/context/auth-context';
-import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import useAuthContext from '@/hooks/useAuthContext';
 
 export function UserToggle() {
-  const auth = useContext(AuthContext);
+  const auth = useAuthContext();
   const navigate = useNavigate();
 
   return (

@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from './ui/button';
 import {
@@ -17,11 +17,11 @@ import {
   SelectValue,
 } from './ui/select';
 import useQuizzes from '@/hooks/useQuizzes';
-import { AuthContext } from '@/context/auth-context';
 import useAttempt from '@/hooks/useAttempt';
-import { QuizContext } from '@/context/quiz-context';
 import { Attempt } from '@/lib/types';
 import { Question } from '@/lib/types';
+import useQuizContext from '@/hooks/useQuizContext';
+import useAuthContext from '@/hooks/useAuthContext';
 
 const QuizPicker = () => {
   const navigate = useNavigate();
@@ -33,8 +33,8 @@ const QuizPicker = () => {
     console.error(error);
   }
 
-  const quiz = useContext(QuizContext);
-  const auth = useContext(AuthContext);
+  const quiz = useQuizContext();
+  const auth = useAuthContext();
   const attempt = useAttempt();
   const handleClick = (quizId: string) => {
     if (auth?.authState?.name) {

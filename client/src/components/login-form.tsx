@@ -19,10 +19,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Label } from './ui/label';
 import { Input } from './ui/input';
 import { Link, useNavigate } from 'react-router-dom';
-import { useContext, useState } from 'react';
-import { AuthContext } from '@/context/auth-context';
+import { useState } from 'react';
 import useLogin from '@/hooks/useLogin';
 import axios from 'axios';
+import useAuthContext from '@/hooks/useAuthContext';
 
 const LoginForm = () => {
   const LoginSchema = z.object({
@@ -46,7 +46,7 @@ const LoginForm = () => {
 
   const login = useLogin();
 
-  const auth = useContext(AuthContext);
+  const auth = useAuthContext();
 
   const navigate = useNavigate();
 
