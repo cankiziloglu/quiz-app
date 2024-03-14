@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom';
 import NavBar from '../components/navbar';
 import Footer from '../components/footer';
 import { ThemeProvider } from '@/context/theme-provider';
+import { Toaster } from '@/components/ui/toaster';
 
 const Layout = () => {
   return (
@@ -16,6 +17,7 @@ const Layout = () => {
           <main className='flex flex-grow overflow-auto justify-center items-center w-full h-full'>
             <Outlet />
           </main>
+          <Toaster />
           <Footer />
         </div>
       </ThemeProvider>

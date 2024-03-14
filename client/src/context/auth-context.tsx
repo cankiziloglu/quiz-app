@@ -2,6 +2,7 @@ import { createContext, useState } from 'react';
 import Cookies from 'js-cookie';
 import { UserType } from '@/lib/types';
 import useLogout from '@/hooks/useLogout';
+import { useToast } from '@/components/ui/use-toast';
 
 type AuthContextType = {
   authState: UserType | null;
@@ -20,6 +21,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     : undefined;
 
   const logoutCall = useLogout();
+  const { toast } = useToast();
 
   const [authState, setAuthState] = useState<UserType>({
     token: token ? token : '',
@@ -35,10 +37,10 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = () => {
     logoutCall.mutate(authState, {
-      onSuccess: (response) => {
+      onSuccess: () => {
         Cookies.remove('token');
         Cookies.remove('user');
-        console.log(response);
+        toast({ description: 'Logged out succesfully' });
       },
       onError: (error) => {
         console.error(error);
