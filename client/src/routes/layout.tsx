@@ -11,7 +11,7 @@ const Layout = () => {
       <ThemeProvider defaultTheme='dark' storageKey='vite-ui-theme'>
         <div
           id='container'
-          className='flex flex-col h-screen w-screen mx-auto p-3 gap-4 overflow-hidden'
+          className='flex flex-col h-screen w-screen mx-auto p-3 gap-4 overflow-hidden max-w-screen-lg'
         >
           <NavBar />
           <main className='flex flex-grow overflow-auto justify-center items-center w-full h-full'>

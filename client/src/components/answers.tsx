@@ -1,52 +1,61 @@
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Separator } from './ui/separator';
 import { Card, CardContent } from './ui/card';
+import { Answer, Question, UserAnswer } from '@/lib/types';
+import { useEffect, useState } from 'react';
 
-const Answers = () => {
+type AnswerProps = {
+  question: Question;
+  quizState: UserAnswer[];
+  setQuizInfo: (quizState: UserAnswer[]) => void;
+};
+
+const Answers = ({ question, quizState, setQuizInfo }: AnswerProps) => {
+  const question_id = question.question_id;
+  const answers: Answer[] = question.answers;
+
+  const handleValueChange = (value: string) => {
+    setQuizInfo([
+      ...quizState.filter((item) => item.question_id !== question_id),
+      { question_id, answer_id: value },
+    ]);
+  };
+
+  const [answer, setAnswer] = useState<string>('');
+
+  useEffect(() => {
+    const newAnswer = quizState.find(
+      (item) => item.question_id === question_id
+    )?.answer_id;
+    setAnswer(newAnswer || '');
+  }, [question_id, quizState]);
+
   return (
-    <Card className='p-none'>
-      <CardContent className='p-8'>
-        <RadioGroup>
-          <div className='flex items-center space-x-2 py-2'>
-            <RadioGroupItem value='option-1' id='option-1' />
-            <Label
-              htmlFor='option-1'
-              className='font-normal text-lg md:text-xl'
+    <Card className='p-none h-full flex flex-col justify-center'>
+      <CardContent>
+        <RadioGroup
+          key={answer}
+          onValueChange={(value) => handleValueChange(value)}
+          defaultValue={answer}
+        >
+          {answers.map((answer: Answer) => (
+            <div
+              className='flex items-center space-x-2 py-2'
+              key={answer.answer_id}
             >
-              Option 1
-            </Label>
-          </div>
-          <Separator />
-          <div className='flex items-center space-x-2 py-2'>
-            <RadioGroupItem value='option-2' id='option-2' />
-            <Label
-              htmlFor='option-2'
-              className='font-normal text-lg md:text-xl'
-            >
-              Option 2
-            </Label>
-          </div>
-          <Separator />
-          <div className='flex items-center space-x-2 py-2'>
-            <RadioGroupItem value='option-3' id='option-3' />
-            <Label
-              htmlFor='option-3'
-              className='font-normal text-lg md:text-xl'
-            >
-              Option 3
-            </Label>
-          </div>
-          <Separator />
-          <div className='flex items-center space-x-2 py-2'>
-            <RadioGroupItem value='option-4' id='option-4' />
-            <Label
-              htmlFor='option-4'
-              className='font-normal text-lg md:text-xl'
-            >
-              Option 4
-            </Label>
-          </div>
+              <RadioGroupItem
+                value={answer.answer_id}
+                className='mr-3'
+                id={answer.answer_id}
+              />
+              <Label
+                className='font-normal text-md md:text-xl'
+                htmlFor={answer.answer_id}
+              >
+                {answer.content}
+              </Label>
+            </div>
+          ))}
         </RadioGroup>
       </CardContent>
     </Card>

@@ -6,6 +6,8 @@ type QuizContextType = {
   attemptState: Attempt;
   quizState: UserAnswer[];
   questionsState: Question[];
+  quizTitle: string;
+  setQuizTitle: (quizTitle: string) => void;
   setAttemptInfo: (attemptInfo: Attempt) => void;
   setQuizInfo: (quizInfo: UserAnswer[]) => void;
   setQuestionsInfo: (questionsInfo: Question[]) => void;
@@ -40,13 +42,7 @@ function QuizProvider({ children }: { children: React.ReactNode }) {
   const [quizState, setQuizState] = useState<UserAnswer[]>(
     quiz
       ? quiz
-      : [
-          {
-            attempt_id: '',
-            question_id: '',
-            answer_id: '',
-          },
-        ]
+      : []
   );
 
   const [questionsState, setQuestionsState] = useState<Question[]>(
@@ -65,6 +61,8 @@ function QuizProvider({ children }: { children: React.ReactNode }) {
           },
         ]
   );
+
+  const [quizTitle, setQuizTitle] = useState<string>('');
 
   const setAttemptInfo = (attemptInfo: Attempt) => {
     setAttemptState(attemptInfo);
@@ -93,6 +91,8 @@ function QuizProvider({ children }: { children: React.ReactNode }) {
         attemptState,
         quizState,
         questionsState,
+        quizTitle,
+        setQuizTitle: (quizTitle: string) => setQuizTitle(quizTitle),
         setAttemptInfo: (attemptInfo: Attempt) => setAttemptInfo(attemptInfo),
         setQuizInfo: (quizInfo: UserAnswer[]) => setQuizInfo(quizInfo),
         setQuestionsInfo: (questionsInfo: Question[]) =>

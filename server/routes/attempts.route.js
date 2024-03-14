@@ -10,6 +10,7 @@ const router = express.Router();
 router.post('/', auth, async (req, res) => {
   const quiz_id = parseInt(req.body.quiz_id);
   const user_id = parseInt(req.user.user_id);
+  console.log(user_id, quiz_id);
 
   const { error } = startAttempt({ quiz_id, user_id });
   if (error) return res.status(400).send(error.details[0].message);

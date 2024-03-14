@@ -37,6 +37,9 @@ const QuizPicker = () => {
   const auth = useAuthContext();
   const attempt = useAttempt();
   const handleClick = (quizId: string) => {
+    if (!quizId) {
+      return;
+    }
     if (auth?.authState?.name) {
       if (quiz?.attemptState?.quiz_id === quizId) {
         navigate('/quiz');
@@ -56,6 +59,9 @@ const QuizPicker = () => {
             console.error(error);
           },
         });
+        quiz?.setQuizTitle(
+          quizzes!.filter((quiz) => quiz.quiz_id === quizId)[0].title
+        );
       }
     } else {
       navigate('/login');
