@@ -26,7 +26,18 @@ function validateLogin(user) {
   return schema.validate(user);
 }
 
+function validateEdit(user) {
+  const schema = Joi.object({
+    name: Joi.string().min(2).max(50).required(),
+    email: Joi.string().email().required(),
+    password: passwordComplexity(complexity).optional(),
+    role: Joi.string().valid('USER', 'ADMIN').optional(),
+  });
+  return schema.validate(user);
+}
+
 module.exports = {
   validateSignup,
   validateLogin,
+  validateEdit,
 };

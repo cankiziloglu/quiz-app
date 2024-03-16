@@ -31,7 +31,11 @@ const SignupForm = () => {
     password: z
       .string()
       .min(8, { message: 'Must be at least 8 characters long' })
-      .max(20, { message: 'Must be max 20 characters long' }),
+      .max(20, { message: 'Must be max 20 characters long' })
+      .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/, {
+        message:
+          'Must contain at least one uppercase, one lowercase, and one numerical character',
+      }),
   });
 
   type SignupSchemaType = z.infer<typeof SignupSchema>;

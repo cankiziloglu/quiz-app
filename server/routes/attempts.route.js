@@ -1,7 +1,11 @@
 const express = require('express');
 const auth = require('../middleware/auth');
 const admin = require('../middleware/admin');
-const { startAttempt, submitAttempt, shuffleQuestions } = require('../models/attempts.model');
+const {
+  startAttempt,
+  submitAttempt,
+  shuffleQuestions,
+} = require('../models/attempts.model');
 const prisma = require('../prisma/Client');
 
 const router = express.Router();
@@ -45,7 +49,10 @@ router.post('/', auth, async (req, res) => {
     },
   });
 
-  const shuffledQuestions = shuffleQuestions(questions, questionCount.question_count);
+  const shuffledQuestions = shuffleQuestions(
+    questions,
+    questionCount.question_count
+  );
 
   const attempt = await prisma.quizAttempt.create({
     data: {
@@ -66,8 +73,6 @@ router.post('/', auth, async (req, res) => {
   res.status(201).json({ attempt, shuffledQuestions });
 });
 
-
-
 //Get all attempts of user
 router.get('/me', auth, async (req, res) => {
   const user_id = parseInt(req.user.user_id);
@@ -76,7 +81,26 @@ router.get('/me', auth, async (req, res) => {
       user_id: user_id,
     },
     include: {
-      userAnswers: true,
+      userAnswers: {
+        include: {
+          answer: {
+            select: {
+              content: true,
+              is_correct: true,
+            },
+          },
+          question: {
+            select: {
+              content: true,
+            },
+          },
+        },
+      },
+      quiz: {
+        select: {
+          title: true,
+        },
+      },
     },
     orderBy: {
       attempt_id: 'desc',
@@ -92,17 +116,36 @@ router.get('/', auth, admin, async (req, res) => {
   let query = {};
   if (req.query.quiz_id) {
     const quiz_id = parseInt(req.query.quiz_id);
-    query = { ...query, 'quiz_id': quiz_id };
+    query = { ...query, quiz_id: quiz_id };
   }
   if (req.query.user_id) {
     const user_id = parseInt(req.query.user_id);
-    query = { ...query, 'user_id': user_id };
+    query = { ...query, user_id: user_id };
   }
 
   const attempts = await prisma.quizAttempt.findMany({
     where: { ...query },
     include: {
-      userAnswers: true,  // TODO: do we need to include answers?
+      userAnswers: {
+        include: {
+          answer: {
+            select: {
+              content: true,
+              is_correct: true,
+            },
+          },
+          question: {
+            select: {
+              content: true,
+            },
+          },
+        },
+      },
+      quiz: {
+        select: {
+          title: true,
+        },
+      },
     },
     orderBy: {
       attempt_id: 'desc',
@@ -118,7 +161,7 @@ router.get('/:attempt_id', auth, admin, async (req, res) => {
       attempt_id: parseInt(req.params.attempt_id),
     },
     include: {
-      userAnswers: true,  // TODO: include questions 
+      userAnswers: true, // TODO: include questions
     },
   });
   if (!attempt) return res.status(404).send('Attempt not found.');
