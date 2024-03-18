@@ -14,7 +14,7 @@ const Layout = () => {
           className='flex flex-col h-screen w-screen mx-auto p-3 gap-4 overflow-hidden max-w-screen-lg'
         >
           <NavBar />
-          <main className='overflow-auto w-full h-full'>
+          <main className='overflow-auto w-full h-full flex'>
             <Outlet />
           </main>
           <Toaster />

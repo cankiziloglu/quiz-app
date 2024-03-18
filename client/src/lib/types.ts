@@ -12,11 +12,12 @@ export type Attempt = {
   attempt_id?: string;
   quiz_id?: string;
   user_id?: string;
-  answers?: UserAnswer[];
+  userAnswers?: UserAnswer[];
   created_at?: string;
   updated_at?: string;
   question_count?: number;
   score?: number | null;
+  quiz?: Quiz;
 };
 
 export type UserAnswer = {
@@ -25,6 +26,8 @@ export type UserAnswer = {
   question_id?: string;
   answer_id?: string;
   created_at?: string;
+  answer?: Answer;
+  question?: Question;
 };
 
 export type Question = {
@@ -39,12 +42,18 @@ export type Question = {
   question_id: string;
   content: string;
   answers: Answer[];
+  created_at?: string;
+  updated_at?: string;
+  quiz_id?: string;
 };
 
 export type Answer = {
   answer_id: string;
   content: string;
   is_correct?: boolean;
+  question_id?: string;
+  created_at?: string;
+  updated_at?: string;
 };
 
 export type Quiz = {
@@ -78,3 +87,5 @@ export type AttemptType = {
   attempt: Attempt;
   shuffledQuestions: Question[];
 };
+
+export type UserAttemptsType = Attempt & { quiz?: Quiz };

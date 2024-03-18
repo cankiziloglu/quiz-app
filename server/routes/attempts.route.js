@@ -83,24 +83,15 @@ router.get('/me', auth, async (req, res) => {
     include: {
       userAnswers: {
         include: {
-          answer: {
-            select: {
-              content: true,
-              is_correct: true,
-            },
-          },
+          answer: true,
           question: {
-            select: {
-              content: true,
+            include: {
+              answers: true,
             },
           },
         },
       },
-      quiz: {
-        select: {
-          title: true,
-        },
-      },
+      quiz: true,
     },
     orderBy: {
       attempt_id: 'desc',
@@ -214,6 +205,31 @@ router.post('/:attempt_id', auth, async (req, res) => {
   });
 
   res.json(attempt);
+});
+
+router.delete('/:attempt_id', auth, async (req, res) => {
+  const attempt_id = parseInt(req.params.attempt_id);
+  const attempt = await prisma.quizAttempt.findUnique({
+    where: {
+      attempt_id: attempt_id,
+      user_id: req.user.user_id,
+    },
+  });
+  if (!attempt) return res.status(404).send('Attempt not found.');
+  
+  await prisma.userAnswer.deleteMany({
+    where: {
+      attempt_id: attempt_id,
+    },
+  });
+
+  await prisma.quizAttempt.delete({
+    where: {
+      attempt_id: attempt_id,
+      user_id: req.user.user_id,
+    },
+  });
+  res.json((message = 'Attempt deleted'));
 });
 
 module.exports = router;

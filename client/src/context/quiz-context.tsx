@@ -39,11 +39,7 @@ function QuizProvider({ children }: { children: React.ReactNode }) {
         }
   );
 
-  const [quizState, setQuizState] = useState<UserAnswer[]>(
-    quiz
-      ? quiz
-      : []
-  );
+  const [quizState, setQuizState] = useState<UserAnswer[]>(quiz ? quiz : []);
 
   const [questionsState, setQuestionsState] = useState<Question[]>(
     questions

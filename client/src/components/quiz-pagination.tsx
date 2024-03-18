@@ -13,6 +13,7 @@ import {
 } from './ui/dialog';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 
 type QuizPaginationProps = {
   question: number;
@@ -61,6 +62,7 @@ const QuizPagination = ({
   };
 
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   return (
     <div className='flex justify-between items-center'>
@@ -95,11 +97,18 @@ const QuizPagination = ({
           </DialogTrigger>
           <DialogContent className='space-y-6 flex flex-col items-center justify-center place-items-center'>
             <DialogHeader className='space-y-6 flex flex-col items-center justify-center place-items-center'>
-              <DialogTitle className='text-3xl md:text-4xl'>Congratulations</DialogTitle>
+              <DialogTitle className='text-3xl md:text-4xl'>
+                Congratulations
+              </DialogTitle>
               <DialogDescription className='text-lg md:text-xl text-center'>
-                You scored <span className='text-2xl md:text-2xl font-bold text-primary'>{score}</span>{' '}
+                You scored{' '}
+                <span className='text-2xl md:text-2xl font-bold text-primary'>
+                  {score}
+                </span>{' '}
                 correct answers out of{' '}
-                <span className='text-2xl md:text-2xl font-bold text-primary'>{totalQuestions}</span>{' '}
+                <span className='text-2xl md:text-2xl font-bold text-primary'>
+                  {totalQuestions}
+                </span>{' '}
                 questions
               </DialogDescription>
             </DialogHeader>
@@ -110,8 +119,9 @@ const QuizPagination = ({
                   setQuizInfo([]);
                   setAttemptInfo({});
                   setQuestionsInfo([]);
-                  }}
-                  size='lg'
+                  queryClient.invalidateQueries({ queryKey: ['userAttempts'] });
+                }}
+                size='lg'
               >
                 Close
               </Button>

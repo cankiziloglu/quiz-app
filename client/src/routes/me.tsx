@@ -9,8 +9,8 @@ const Me = () => {
   const [activeTab, setActiveTab] = useState<AccountTabType>('account-details');
 
   return (
-    <div className='flex flex-col md:flex-row gap-8'>
-      <aside className='flex md:flex-col gap-2 w-full md:w-1/5 md:h-full justify-center'>
+    <div className='flex flex-col md:flex-row gap-8 w-full h-full'>
+      <aside className='flex md:flex-col gap-2 w-full md:w-1/5 md:h-full justify-center md:justify-start'>
         <Button
           variant={activeTab === 'account-details' ? 'default' : 'ghost'}
           onClick={() => setActiveTab('account-details')}

@@ -1,5 +1,3 @@
-import useUserAttemptContext from '@/hooks/useUserAttemptContext';
-import { DataTable } from './ui/data-table';
 import { UserAttemptsType } from '@/lib/types';
 import { ColumnDef } from '@tanstack/react-table';
 import {
@@ -12,6 +10,8 @@ import {
 } from './ui/dropdown-menu';
 import { Button } from './ui/button';
 import { DotsVerticalIcon } from '@radix-ui/react-icons';
+import { DataTable } from '@/components/ui/data-table';
+import useUserAttemptContext from '@/hooks/useUserAttemptContext';
 import {
   Dialog,
   DialogContent,
@@ -20,13 +20,8 @@ import {
   DialogTitle,
 } from './ui/dialog';
 import { useState } from 'react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useToast } from './ui/use-toast';
-import { AttemptDetailsType } from '@/context/userAttempt-context';
 
-const UserStatistics = () => {
-  const { userAttemts, error, isLoading, getAttemptDetails } =
-    useUserAttemptContext();
+const AttemptDetails = () => {
 
   const userAttemptColumns: ColumnDef<UserAttemptsType>[] = [
     // {
@@ -50,6 +45,7 @@ const UserStatistics = () => {
       id: 'actions',
       cell: ({ row }) => {
         const attempt = row.original;
+        console.log(attempt);
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild className='text-right'>
@@ -66,11 +62,7 @@ const UserStatistics = () => {
                 View Details
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={() => handleDeleteAttempt(attempt.attempt_id!)}
-              >
-                Delete Attempt
-              </DropdownMenuItem>
+              <DropdownMenuItem>Delete Attempt</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         );
@@ -78,7 +70,7 @@ const UserStatistics = () => {
     },
   ];
 
-  const userAnswerColumns: ColumnDef<AttemptDetailsType>[] = [
+  const userAnswerColumns: ColumnDef<UserAttemptsType>[] = [
     {
       accessorKey: 'question',
       header: 'Question',
@@ -90,14 +82,6 @@ const UserStatistics = () => {
     {
       accessorKey: 'is_correct',
       header: 'Correct?',
-      cell: ({ row }) => {
-        const isCorrect = row.original.is_correct;
-        return isCorrect ? (
-          <span className='text-green-600'>Yes</span>
-        ) : (
-          <span className='text-red-600'>No</span>
-        );
-      },
       // footer: (rows) => {
       //   const correctCount = rows.filter((row) => row.original.is_correct).length
       //   return `${correctCount} / ${rows.length}`
@@ -105,66 +89,32 @@ const UserStatistics = () => {
     },
   ];
 
-  const [isOpen, setIsOpen] = useState(false);
-  const [attemptId, setAttemptId] = useState('');
+  const { getAttemptDetails } = useUserAttemptContext();
+
+  const [isOpen, setIsOpen] = useState(true);
   const toggleOpen = () => {
     setIsOpen(!isOpen);
   };
   const handleViewDetails = (attemptId: string) => {
-    setAttemptId(attemptId);
-    toggleOpen();
-  };
-
-  const queryClient = useQueryClient();
-
-  const deletion = useMutation({
-    mutationFn: async (attemptId: string) => {
-      const deleted = await fetch(`/api/attempt/${attemptId}`, {
-        method: 'DELETE',
-      });
-      if (deleted.ok) {
-        queryClient.invalidateQueries({ queryKey: ['userAttempts'] });
-      }
-    },
-  });
-
-  const { toast } = useToast();
-  const handleDeleteAttempt = (attemptId: string) => {
-    deletion.mutate(attemptId, {
-      onSuccess: () => {
-        toast({ description: 'Attempt deleted successfully' });
-      },
-      onError: () => {
-        toast({ description: 'Failed to delete attempt' });
-      },
-    });
-  };
-
-  return isLoading ? (
-    <div>Loading...</div>
-  ) : error ? (
-    <div>Error</div>
-  ) : (
-    <>
-      <DataTable columns={userAttemptColumns} data={userAttemts} />
+    return (
       <Dialog open={isOpen} onOpenChange={toggleOpen}>
-        <DialogContent className='max-h-screen overflow-y-scroll max-w-full md:w-2/3 text-xs'>
-          <DialogHeader>
-            <DialogTitle>Quiz Attempt Details</DialogTitle>
-          </DialogHeader>
+        <DialogHeader>
+          <DialogTitle>Quiz Attempt Details</DialogTitle>
+        </DialogHeader>
+        <DialogContent>
           <DataTable
             columns={userAnswerColumns}
-            data={getAttemptDetails(attemptId) as AttemptDetailsType[]}
+            data={getAttemptDetails(attemptId) as UserAttemptsType[]}
           />
-          <DialogFooter>
-            <Button variant='secondary' onClick={toggleOpen}>
-              Close
-            </Button>
-          </DialogFooter>
         </DialogContent>
+        <DialogFooter>
+          <Button variant='secondary' onClick={toggleOpen}>
+            Close
+          </Button>
+        </DialogFooter>
       </Dialog>
-    </>
-  );
-};
+    );
+  };
+}
 
-export default UserStatistics;
+export { AttemptDetails, userAttemptColumns, userAnswerColumns }
