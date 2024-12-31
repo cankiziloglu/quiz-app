@@ -117,7 +117,7 @@ The frontend is built with React and TypeScript. It uses React Router for naviga
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/quiz-app.git
+   git clone https://github.com/cankiziloglu/quiz-app.git
    cd quiz-app
    ```
 
