@@ -16,7 +16,7 @@ const Quiz = () => {
   return (
     <div className='flex flex-col w-full h-full items-center'>
       <div id='header' className='w-full py-6'>
-        <h1 className='text-2xl md:text-3xl font-bold text-center'>
+        <h1 className='text-2xl md:text-3xl font-display text-center'>
           {quizTitle}
         </h1>
       </div>

@@ -8,6 +8,10 @@ import Quiz from './quiz';
 import PrivateRoutes from './private-routes';
 import Dashboard from './admin';
 import Me from './me';
+import UsersDashboard from '@/components/users-dashboard';
+import QuizzesDashboard from '@/components/quizzes-dashboard';
+import QuestionsDashboard from '@/components/questions-dashboard';
+import AttemptsDashboard from '@/components/attmepts-dashboard';
 
 const router = createBrowserRouter([
   {
@@ -29,7 +33,16 @@ const router = createBrowserRouter([
         children: [
           { path: 'me', element: <Me /> },
           { path: 'quiz', element: <Quiz /> },
-          { path: 'dashboard', element: <Dashboard /> },
+          {
+            path: 'dashboard',
+            element: <Dashboard />,
+            children: [
+              { path: 'users', element: <UsersDashboard /> },
+              { path: 'quizzes', element: <QuizzesDashboard /> },
+              { path: 'questions', element: <QuestionsDashboard /> },
+              { path: 'attempts', element: <AttemptsDashboard /> },
+            ],
+          },
         ],
       },
     ],

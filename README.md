@@ -7,6 +7,7 @@ This is a full-stack Quiz Application built with Node.js, Express, React, and Ta
 ### Backend
 - **Node.js**: JavaScript runtime for building server-side applications.
 - **Express**: Web framework for Node.js.
+- **Prisma**: 
 - **Joi**: Data validation library.
 - **Joi-password-complexity**: Password complexity validation for Joi.
 - **dotenv**: Loads environment variables from a `.env` file.
@@ -29,23 +30,26 @@ This is a full-stack Quiz Application built with Node.js, Express, React, and Ta
 - User authentication and authorization.
 - Quiz management (create, edit, delete quizzes).
 - Question management (create, edit, delete questions).
-- Attempt management (start and submit attempts).
+- Attempt management (start and submit, view and delete attempts).
 - Data validation using Joi.
+- Database queries and transactions using Prisma ORM.
 
 ### Frontend
-- User login and signup.
-- Dashboard to view available quizzes.
-- Quiz taking interface.
-- View past attempts and scores.
+- User login, logout and signup.
+- Quiz taking interface, one question at a time.
+- View & edit account info & password.
+- View past quiz attempts and scores.
 - Responsive design with Tailwind CSS.
+- State management using React Context API.
+- Admin dashboard to manage quizzes, questions, answers, attempts and users. 
 
 ## How the App Works
 
 ### Backend
-The backend is built with Node.js and Express. It provides RESTful APIs for managing users, quizzes, questions, and attempts. Data validation is handled using Joi. The backend also includes middleware for security, logging, and error handling.
+The backend is built with Node.js and Express. It provides RESTful APIs for managing users, quizzes, questions, and attempts. Data validation is handled using Joi. Database queries and transactions are handled with Prisma Orm using a Postgres database. The backend includes middleware for authentication, authorization, security, logging, and error handling. User passwords are hashed using bcrypt and session tokens are created using jwt and passed as cookies to the frontend. 
 
 ### Frontend
-The frontend is built with React and TypeScript. It uses React Router for navigation and React Query for data fetching. The UI is styled using Tailwind CSS. The frontend communicates with the backend APIs to perform CRUD operations and manage user sessions.
+The frontend is built with React and TypeScript. It uses React Router for navigation and React Query for data fetching. The UI is styled using Tailwind CSS. The frontend communicates with the backend APIs to perform CRUD operations and manage user sessions. When a user starts an attempt to a quiz, the questions are stored in local storage, so if the user terminates that session and comes back later to solve the same quiz, questions are served from local storage. Authentication, quiz and attempt data are managed using state (context API). When the user finishes and submits a quiz the result is immediately calculated and shown to the user. User can also view past attempts and their scores and details in their account page. Admins can manage (view, create, edit, delete) users, quizzes, questions and attempts on their dashboard.
 
 ## Routes and Their Usage
 
@@ -87,24 +91,28 @@ The frontend is built with React and TypeScript. It uses React Router for naviga
 
 ### Frontend (under `/client`)
 
-- **Login Page**
-  - Route: `/login`
-  - Description: User login page.
-
 - **Home Page**
   - Route: `/`
   - Description: Displays available quizzes.
 
+- **Login Page**
+  - Route: `/login`
+  - Description: User login page.
+
+- **Sign-up Page**
+  - Route: `/signup`
+  - Description: User sign up page.
+
 - **Quiz Page**
   - Route: `/quiz/:quiz_id`
-  - Description: Interface for taking a quiz.
+  - Description: Interface for taking a quiz. Needs authentication to view.
 
-- **Dashboard Page**
+- **Account Page**
+  - Route: `/me`
+  - Description: Displays user's past attempts and scores. Also enables user to change info and password. Needs authentication to view.
+
+- **Admin Dahboard Page**
   - Route: `/dashboard`
-  - Description: Displays user's past attempts and scores.
-
-- **Admin Page**
-  - Route: `/admin`
   - Description: Interface for managing quizzes and questions (accessible only to admins).
 
 ## Getting Started

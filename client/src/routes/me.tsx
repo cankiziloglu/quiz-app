@@ -31,7 +31,7 @@ const Me = () => {
         </section>
       )}
       {activeTab === 'statistics' && (
-        <section className='w-full md:h-full flex-grow'>
+        <section className='w-full md:h-full md:w-4/5 flex-grow space-y-6'>
           <UserStatistics />
         </section>
       )}

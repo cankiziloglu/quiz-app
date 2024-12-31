@@ -12,7 +12,7 @@ export default function ErrorPage() {
   return (
     <div
       id='error-page'
-      className='flex flex-col justify-center items-center text-center p-8 h-dvh'
+      className='flex flex-col justify-center items-center text-center p-8 mx-auto'
     >
       <h1 className='text-3xl font-display p-8'>Oops!</h1>
       <h3 className='text-xl font-bold p-8'>

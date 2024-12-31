@@ -117,7 +117,7 @@ const AccountDetails = () => {
 
   return (
     <>
-      <Card>
+      <Card className='rounded-none'>
         <CardHeader>
           <CardTitle>{auth?.authState?.name}</CardTitle>
           <CardDescription>{auth?.authState?.email}</CardDescription>
@@ -132,7 +132,7 @@ const AccountDetails = () => {
         </CardFooter>
       </Card>
       {edit === 'account' && (
-        <Card>
+        <Card className='rounded-none'>
           <CardHeader>
             <CardTitle>Change Account Details</CardTitle>
           </CardHeader>
@@ -179,7 +179,7 @@ const AccountDetails = () => {
         </Card>
       )}
       {edit === 'password' && (
-        <Card>
+        <Card className='rounded-none'>
           <CardHeader>
             <CardTitle>Change Password</CardTitle>
           </CardHeader>
