@@ -75,7 +75,7 @@ const SignupForm = () => {
   };
 
   return (
-    <Card className='w-full md:w-1/2 mx-auto'>
+    <Card className='w-full md:w-1/2 mx-auto rounded-none'>
       <CardHeader>
         <CardTitle className='text-xl'>Sign up</CardTitle>
         <CardDescription>
