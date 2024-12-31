@@ -19,7 +19,7 @@ router.post('/', auth, async (req, res) => {
   const { error } = startAttempt({ quiz_id, user_id });
   if (error) return res.status(400).send(error.details[0].message);
 
-  //   Get questions for the attempt including
+  //   Get questions for the attempt including answers
   const questions = await prisma.question.findMany({
     where: {
       quiz_id: quiz_id,
@@ -207,6 +207,7 @@ router.post('/:attempt_id', auth, async (req, res) => {
   res.json(attempt);
 });
 
+// Delete an attempt
 router.delete('/:attempt_id', auth, async (req, res) => {
   const attempt_id = parseInt(req.params.attempt_id);
   const attempt = await prisma.quizAttempt.findUnique({

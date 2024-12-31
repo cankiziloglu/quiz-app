@@ -19,7 +19,9 @@ CREATE TABLE "Quiz" (
     "quiz_id" SERIAL NOT NULL,
     "title" TEXT NOT NULL,
     "description" TEXT,
+    "question_count" INTEGER NOT NULL,
     "duration" INTEGER NOT NULL,
+    "tags" TEXT[],
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
@@ -54,6 +56,7 @@ CREATE TABLE "QuizAttempt" (
     "attempt_id" SERIAL NOT NULL,
     "quiz_id" INTEGER NOT NULL,
     "user_id" INTEGER NOT NULL,
+    "question_count" INTEGER NOT NULL,
     "score" INTEGER,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,

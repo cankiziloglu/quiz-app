@@ -9,7 +9,7 @@ export type AttemptDetailsType = {
 };
 
 type UserAttemptContextType = {
-  userAttemts: UserAttemptsType[];
+  userAttemts: UserAttemptsType[] | undefined;
   getAttemptDetails: (attemptId: string) => AttemptDetailsType[] | undefined;
   isLoading: boolean;
   error: unknown;
@@ -20,13 +20,15 @@ const UserAttemptContext = createContext<UserAttemptContextType>(null);
 const UserAttemptProvider = ({ children }: { children: React.ReactNode }) => {
   const { data, error, isLoading } = useQuery<UserAttemptsType[]>({
     queryKey: ['userAttempts'],
-    queryFn: () => fetch('/api/attempt/me').then((res) => res.json()),
+    queryFn: () =>
+      fetch('/api/attempt/me', {
+        credentials: 'include', // Add this to include cookies
+      }).then((res) => res.json()),
     staleTime: 1000 * 60 * 5, // 5 minutes
     refetchOnWindowFocus: false,
   });
 
-  if (!data) return null;
-  const userAttemts: UserAttemptsType[] = data?.map((attempt) => ({
+  const userAttemts: UserAttemptsType[] | undefined = data?.map((attempt) => ({
     attempt_id: attempt.attempt_id,
     quiz_title: attempt.quiz?.title,
     created_at: new Date(attempt.created_at as string).toDateString(),

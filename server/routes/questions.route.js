@@ -128,26 +128,26 @@ router.delete('/:question_id', auth, admin, async (req, res) => {
 });
 
 // Get Questions of a Quiz without is_correct field of Answers
-router.get('/quiz', auth, async (req, res) => {
-  const questions = await prisma.question.findMany({
-    where: {
-      quiz_id: parseInt(req.params.quiz_id),
-    },
-    orderBy: {
-      question_id: 'asc',
-    },
-    select: {
-      question_id: true,
-      content: true,
-      answers: {
-        select: {
-          answer_id: true,
-          content: true,
-        },
-      },
-    },
-  });
-  res.json(questions);
-});
+// router.get('/quiz', auth, async (req, res) => {
+//   const questions = await prisma.question.findMany({
+//     where: {
+//       quiz_id: parseInt(req.params.quiz_id),
+//     },
+//     orderBy: {
+//       question_id: 'asc',
+//     },
+//     select: {
+//       question_id: true,
+//       content: true,
+//       answers: {
+//         select: {
+//           answer_id: true,
+//           content: true,
+//         },
+//       },
+//     },
+//   });
+//   res.json(questions);
+// });
 
 module.exports = router;

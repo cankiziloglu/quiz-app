@@ -8,7 +8,7 @@ const admin = require('../middleware/admin');
 const router = express.Router();
 
 //  /api/quizzes
-// List all quizzes to authenticated users only.
+// List all quizzes.
 router.get('/', async (req, res) => {
   const quizzes = await prisma.quiz.findMany({
     orderBy: {
