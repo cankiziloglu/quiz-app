@@ -23,31 +23,32 @@ router.get('/', auth, admin, async (req, res) => {
   res.json(questions);
 });
 
-// Create a new question for a quiz
+// Create new questions for a quiz
 router.post('/', auth, admin, async (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
   const quiz_id = parseInt(req.params.quiz_id);
 
-  const data = _.pick(req.body, ['content', 'answers']);
-  const question = await prisma.question.create({
-    data: {
-      content: data.content,
-      quiz: {
-        connect: {
-          quiz_id: quiz_id,
+  const questions = req.body.map(async (qstn) => {
+    await prisma.question.create({
+      data: {
+        content: qstn.content,
+        quiz: {
+          connect: {
+            quiz_id: quiz_id,
+          },
+        },
+        answers: {
+          create: qstn.answers,
         },
       },
-      answers: {
-        create: data.answers,
+      include: {
+        answers: true,
       },
-    },
-    include: {
-      answers: true,
-    },
+    });
   });
-  res.status(201).json(question);
+  res.status(201).json(questions);
 });
 
 module.exports = router;
