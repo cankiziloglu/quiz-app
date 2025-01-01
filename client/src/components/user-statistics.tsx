@@ -25,7 +25,7 @@ import { useToast } from './ui/use-toast';
 import { AttemptDetailsType } from '@/context/userAttempt-context';
 
 const UserStatistics = () => {
-  const { userAttemts, error, isLoading, getAttemptDetails } =
+  const { userAttempts, error, isLoading, getAttemptDetails } =
     useUserAttemptContext();
 
   const userAttemptColumns: ColumnDef<UserAttemptsType>[] = [
@@ -143,10 +143,10 @@ const UserStatistics = () => {
   return isLoading ? (
     <div>Loading...</div>
   ) : error ? (
-    <div>Error</div>
+    <div>No Attempts found</div>
   ) : (
     <>
-      <DataTable columns={userAttemptColumns} data={userAttemts} />
+      <DataTable columns={userAttemptColumns} data={userAttempts!} />
       <Dialog open={isOpen} onOpenChange={toggleOpen}>
         <DialogContent className='max-h-screen overflow-y-scroll max-w-full md:w-2/3 text-xs'>
           <DialogHeader>

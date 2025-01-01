@@ -89,3 +89,4 @@ export type AttemptType = {
 };
 
 export type UserAttemptsType = Attempt & { quiz?: Quiz };
+

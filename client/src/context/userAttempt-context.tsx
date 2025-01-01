@@ -9,7 +9,7 @@ export type AttemptDetailsType = {
 };
 
 type UserAttemptContextType = {
-  userAttemts: UserAttemptsType[] | undefined;
+  userAttempts: UserAttemptsType[] | undefined;
   getAttemptDetails: (attemptId: string) => AttemptDetailsType[] | undefined;
   isLoading: boolean;
   error: unknown;
@@ -28,7 +28,7 @@ const UserAttemptProvider = ({ children }: { children: React.ReactNode }) => {
     refetchOnWindowFocus: false,
   });
 
-  const userAttemts: UserAttemptsType[] | undefined = data?.map((attempt) => ({
+  const userAttempts: UserAttemptsType[] | undefined = data?.map((attempt) => ({
     attempt_id: attempt.attempt_id,
     quiz_title: attempt.quiz?.title,
     created_at: new Date(attempt.created_at as string).toDateString(),
@@ -49,7 +49,7 @@ const UserAttemptProvider = ({ children }: { children: React.ReactNode }) => {
   return (
     <UserAttemptContext.Provider
       value={{
-        userAttemts,
+        userAttempts,
         getAttemptDetails,
         isLoading,
         error,
