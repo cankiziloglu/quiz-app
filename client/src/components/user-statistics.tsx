@@ -1,6 +1,6 @@
-import useUserAttemptContext from '@/hooks/useUserAttemptContext';
+
 import { DataTable } from './ui/data-table';
-import { UserAttemptsType } from '@/lib/types';
+import { AttemptDetailsType, UserAttemptsType } from '@/lib/types';
 import { ColumnDef } from '@tanstack/react-table';
 import {
   DropdownMenu,
@@ -20,13 +20,39 @@ import {
   DialogTitle,
 } from './ui/dialog';
 import { useState } from 'react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useToast } from './ui/use-toast';
-import { AttemptDetailsType } from '@/context/userAttempt-context';
+
 
 const UserStatistics = () => {
-  const { userAttempts, error, isLoading, getAttemptDetails } =
-    useUserAttemptContext();
+
+  const { data, error, isLoading } = useQuery<UserAttemptsType[]>({
+    queryKey: ['userAttempts'],
+    queryFn: () =>
+      fetch('/api/attempt/me', {
+        credentials: 'include', // Add this to include cookies
+      }).then((res) => res.json()),
+    staleTime: 1000 * 60 * 10, // 10 minutes
+    refetchOnWindowFocus: false,
+  });
+
+  const userAttempts: UserAttemptsType[] | undefined = data?.map((attempt) => ({
+    attempt_id: attempt.attempt_id,
+    quiz_title: attempt.quiz?.title,
+    created_at: new Date(attempt.created_at as string).toDateString(),
+    score: attempt.score,
+  }));
+
+  const getAttemptDetails = (attemptId: string): AttemptDetailsType[] => {
+    const attemptDetails = data
+      ?.find((attempt) => attempt.attempt_id === attemptId)
+      ?.userAnswers?.map((attempt) => ({
+        question: attempt.question?.content,
+        answer: attempt.answer?.content,
+        is_correct: attempt.answer?.is_correct,
+      })) as AttemptDetailsType[]; // Add type assertion here
+    return attemptDetails;
+  };
 
   const userAttemptColumns: ColumnDef<UserAttemptsType>[] = [
     // {

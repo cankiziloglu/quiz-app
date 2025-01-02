@@ -6,7 +6,6 @@ import router from './routes/routes';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from './context/auth-context';
 import { QuizProvider } from './context/quiz-context';
-import { UserAttemptProvider } from './context/userAttempt-context';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -22,9 +21,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <QuizProvider>
-          <UserAttemptProvider>
-            <RouterProvider router={router} />
-          </UserAttemptProvider>
+          <RouterProvider router={router} />
         </QuizProvider>
       </AuthProvider>
     </QueryClientProvider>
