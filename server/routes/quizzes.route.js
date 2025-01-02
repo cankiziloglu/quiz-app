@@ -20,23 +20,11 @@ router.get('/', async (req, res) => {
 
 // Create new quiz by authenticated and admin users only.
 router.post('/', auth, admin, async (req, res) => {
-  const { error } = validate(req.body);
+  const { error } = validate(req.body.data);
+  const data = req.body.data
   if (error) return res.status(400).send(error.details[0].message);
-  const data = _.pick(req.body, [
-    'title',
-    'description',
-    'duration',
-    'question_count',
-    'tags',
-  ]);
   const quiz = await prisma.quiz.create({
-    data: {
-      title: data.title,
-      description: data.description,
-      duration: data.duration,
-      question_count: data.question_count,
-      tags: data.tags,
-    },
+    data
   });
   res.status(201).json(quiz);
 });
@@ -62,26 +50,21 @@ router.get('/:quiz_id', auth, async (req, res) => {
 
 // PUT: changes details of a quiz by authenticated and admin users only.
 router.put('/:quiz_id', auth, admin, async (req, res) => {
-  const { error } = validate(req.body);
+  const { error } = validate(req.body.data);
   if (error) return res.status(400).send(error.details[0].message);
-  const data = _.pick(req.body, [
+  const data = _.pick(req.body.data, [
     'title',
     'description',
     'duration',
     'question_count',
     'tags',
   ]);
+  console.log(data)
   const quiz = await prisma.quiz.update({
     where: {
       quiz_id: parseInt(req.params.quiz_id),
     },
-    data: {
-      title: data.title,
-      description: data.description,
-      duration: data.duration,
-      question_count: data.question_count,
-      tags: data.tags,
-    },
+    data
   });
   if (!quiz) return res.status(404).send('Quiz not found.');
   res.json(quiz);

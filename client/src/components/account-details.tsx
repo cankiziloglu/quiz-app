@@ -22,6 +22,7 @@ import {
 import { Label } from './ui/label';
 import useEditAccount from '@/hooks/useEditAccount';
 import { useToast } from './ui/use-toast';
+import { editAccountSchema } from '@/lib/schemas';
 
 type EditType = 'none' | 'account' | 'password';
 
@@ -33,28 +34,7 @@ const AccountDetails = () => {
 
   const { toast } = useToast();
 
-  const editAccountSchema = z
-    .object({
-      name: z
-        .string()
-        .min(2, { message: 'Must be at least 2 characters long' })
-        .optional(),
-      email: z.string().email({ message: 'Invalid email address' }).optional(),
-      password: z
-        .string()
-        .min(8, { message: 'Must be at least 8 characters long' })
-        .max(20, { message: 'Must be max 20 characters long' })
-        .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/, {
-          message:
-            'Must contain at least one uppercase, one lowercase, and one numerical character',
-        })
-        .optional(),
-      cpassword: z.string().optional(),
-    })
-    .refine((data) => data.password === data.cpassword, {
-      message: 'Passwords do not match',
-      path: ['password'],
-    });
+  
 
   type editAccountSchemaType = z.infer<typeof editAccountSchema>;
 
