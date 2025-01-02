@@ -5,9 +5,10 @@ This is a full-stack Quiz Application built with Node.js, Express, React, and Ta
 ## Tech Stack
 
 ### Backend
+
 - **Node.js**: JavaScript runtime for building server-side applications.
 - **Express**: Web framework for Node.js.
-- **Prisma**: 
+- **Prisma**:
 - **Joi**: Data validation library.
 - **Joi-password-complexity**: Password complexity validation for Joi.
 - **dotenv**: Loads environment variables from a `.env` file.
@@ -17,6 +18,7 @@ This is a full-stack Quiz Application built with Node.js, Express, React, and Ta
 - **cookie-parser**: Middleware for parsing cookies.
 
 ### Frontend
+
 - **React**: JavaScript library for building user interfaces.
 - **React Router**: Declarative routing for React.
 - **Tailwind CSS**: Utility-first CSS framework.
@@ -27,6 +29,7 @@ This is a full-stack Quiz Application built with Node.js, Express, React, and Ta
 ## Features
 
 ### Backend
+
 - User authentication and authorization.
 - Quiz management (create, edit, delete quizzes).
 - Question management (create, edit, delete questions).
@@ -35,20 +38,23 @@ This is a full-stack Quiz Application built with Node.js, Express, React, and Ta
 - Database queries and transactions using Prisma ORM.
 
 ### Frontend
+
 - User login, logout and signup.
 - Quiz taking interface, one question at a time.
 - View & edit account info & password.
 - View past quiz attempts and scores.
 - Responsive design with Tailwind CSS.
 - State management using React Context API.
-- Admin dashboard to manage quizzes, questions, answers, attempts and users. 
+- Admin dashboard to manage quizzes, questions, answers, attempts and users.
 
 ## How the App Works
 
 ### Backend
-The backend is built with Node.js and Express. It provides RESTful APIs for managing users, quizzes, questions, and attempts. Data validation is handled using Joi. Database queries and transactions are handled with Prisma Orm using a Postgres database. The backend includes middleware for authentication, authorization, security, logging, and error handling. User passwords are hashed using bcrypt and session tokens are created using jwt and passed as cookies to the frontend. 
+
+The backend is built with Node.js and Express. It provides RESTful APIs for managing users, quizzes, questions, and attempts. Data validation is handled using Joi. Database queries and transactions are handled with Prisma Orm using a Postgres database. The backend includes middleware for authentication, authorization, security, logging, and error handling. User passwords are hashed using bcrypt and session tokens are created using jwt and passed as cookies to the frontend.
 
 ### Frontend
+
 The frontend is built with React and TypeScript. It uses React Router for navigation and React Query for data fetching. The UI is styled using Tailwind CSS. The frontend communicates with the backend APIs to perform CRUD operations and manage user sessions. When a user starts an attempt to a quiz, the questions are stored in local storage, so if the user terminates that session and comes back later to solve the same quiz, questions are served from local storage. Authentication, quiz and attempt data are managed using state (context API). When the user finishes and submits a quiz the result is immediately calculated and shown to the user. User can also view past attempts and their scores and details in their account page. Admins can manage (view, create, edit, delete) users, quizzes, questions and attempts on their dashboard.
 
 ## Routes and Their Usage
@@ -56,58 +62,67 @@ The frontend is built with React and TypeScript. It uses React Router for naviga
 ### Backend (under `/server`)
 
 - **User Routes**
+
   - `POST /api/users/signup`: User signup.
   - `POST /api/users/login`: User sign in.
   - `POST /api/users/logout`: User sign out.
-  - `GET /api/users/me`: Get user details. - *only available to authenticated users*
-  - `PUT /api/users/edit`: Edit user details. - *only available to authenticated users*
-  - `GET /api/users`: Get all users. - *only available to an ADMIN*
-  - `GET /api/users/:user_id`: Get user by id. - *only available to an ADMIN*
-  - `DELETE /api/users/:user_id`: Delete user by id. - *only available to an ADMIN*
+  - `GET /api/users/me`: Get user details. - _only available to authenticated users_
+  - `PUT /api/users/edit`: Edit user details. - _only available to authenticated users_
+  - `GET /api/users`: Get all users. - _only available to an ADMIN_
+  - `GET /api/users/:user_id`: Get user by id. - _only available to an ADMIN_
+  - `PUT /api/users/edit`: Change user's role. - _only available to an ADMIN_
+  - `DELETE /api/users/:user_id`: Delete user by id. - _only available to an ADMIN_
 
 - **Quiz Routes**
+
   - `GET /api/quizzes`: Get all quizzes.
-  - `POST /api/quizzes`: Create a new quiz. - *only available to an ADMIN*
-  - `GET /api/quizzes/:quiz_id`: Get details of a quiz. - *only available to authenticated users*
-  - `PUT /api/quizzes/:quiz_id`: Edit a quiz. - *only available to an ADMIN*
-  - `DELETE /api/quizzes/:quiz_id`: Delete a quiz. - *only available to an ADMIN*
+  - `POST /api/quizzes`: Create a new quiz. - _only available to an ADMIN_
+  - `GET /api/quizzes/:quiz_id`: Get details of a quiz. - _only available to authenticated users_
+  - `PUT /api/quizzes/:quiz_id`: Edit a quiz. - _only available to an ADMIN_
+  - `DELETE /api/quizzes/:quiz_id`: Delete a quiz. - _only available to an ADMIN_
 
 - **Question Routes**
-  - `GET /api/quizzes/:quiz_id/questions`: Get all questions for a quiz. - *only available to an ADMIN*
-  - `POST /api/quizzes/:quiz_id/questions`: Add a new question to a quiz. - *only available to an ADMIN*
-  - `GET /api/quizzes/:quiz_id/questions/:question_id`: Get a question of a quiz. - *only available to an ADMIN*
-  - `PUT /api/quizzes/:quiz_id/questions/:question_id`: Edit a question of a quiz. - *only available to an ADMIN*
-  - `DELETE /api/quizzes/:quiz_id/questions/:question_id`: Delete a question. - *only available to an ADMIN*
-  - 
+
+  - `GET /api/quizzes/:quiz_id/questions`: Get all questions for a quiz. - _only available to an ADMIN_
+  - `POST /api/quizzes/:quiz_id/questions`: Add a new question to a quiz. - _only available to an ADMIN_
+  - `GET /api/quizzes/:quiz_id/questions/:question_id`: Get a question of a quiz. - _only available to an ADMIN_
+  - `PUT /api/quizzes/:quiz_id/questions/:question_id`: Edit a question of a quiz. - _only available to an ADMIN_
+  - `DELETE /api/quizzes/:quiz_id/questions/:question_id`: Delete a question. - _only available to an ADMIN_
+  -
 
 - **Attempt Routes**
-  - `POST /api/attempt`: Start a new attempt. - *only available to authenticated users*
-  - `POST /api/attempt/:attempt_id`: Submit an attempt. - *only available to authenticated users*
-  - `GET /api/attempt/me`: Get all attempts for the logged-in user. - *only available to authenticated users*
-  - `GET /api/attempt/me/:attempt_id`: Get an attempt detail for the logged-in user. - *only available to authenticated users*
-  - `GET /api/attempt`: Get all attempts of a quiz or user. - *only available to an ADMIN*
-  - `GET /api/attempt/:attempt_id`: Get details of an attempt. - *only available to an ADMIN*
-  - `DELETE /api/attempt/:attempt_id`: Delete an attempt. - *only available to authenticated users*
+  - `POST /api/attempt`: Start a new attempt. - _only available to authenticated users_
+  - `POST /api/attempt/:attempt_id`: Submit an attempt. - _only available to authenticated users_
+  - `GET /api/attempt/me`: Get all attempts for the logged-in user. - _only available to authenticated users_
+  - `GET /api/attempt/me/:attempt_id`: Get an attempt detail for the logged-in user. - _only available to authenticated users_
+  - `GET /api/attempt`: Get all attempts of a quiz or user. - _only available to an ADMIN_
+  - `GET /api/attempt/:attempt_id`: Get details of an attempt. - _only available to an ADMIN_
+  - `DELETE /api/attempt/:attempt_id`: Delete an attempt. - _only available to authenticated users_
 
 ### Frontend (under `/client`)
 
 - **Home Page**
+
   - Route: `/`
   - Description: Displays available quizzes.
 
 - **Login Page**
+
   - Route: `/login`
   - Description: User login page.
 
 - **Sign-up Page**
+
   - Route: `/signup`
   - Description: User sign up page.
 
 - **Quiz Page**
+
   - Route: `/quiz/:quiz_id`
   - Description: Interface for taking a quiz. Needs authentication to view.
 
 - **Account Page**
+
   - Route: `/me`
   - Description: Displays user's past attempts and scores. Also enables user to change info and password. Needs authentication to view.
 
@@ -118,18 +133,21 @@ The frontend is built with React and TypeScript. It uses React Router for naviga
 ## Getting Started
 
 ### Prerequisites
+
 - Node.js
 - npm
 
 ### Installation
 
 1. Clone the repository:
+
    ```bash
    git clone https://github.com/cankiziloglu/quiz-app.git
    cd quiz-app
    ```
 
 2. Install dependencies for the backend:
+
    ```bash
    cd server
    npm install
@@ -144,12 +162,14 @@ The frontend is built with React and TypeScript. It uses React Router for naviga
 ### Running the App
 
 1. Start the backend server:
+
    ```bash
    cd server
    npm run dev
    ```
 
 2. Start the frontend development server:
+
    ```bash
    cd ../client
    npm run dev

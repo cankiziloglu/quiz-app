@@ -21,6 +21,12 @@ router.get('/', auth, admin, async (req, res) => {
     orderBy: {
       name: 'asc',
     },
+    select: {
+      user_id: true,
+      name: true,
+      role: true,
+      email: true,
+    },
   });
   res.json(users);
 });
@@ -88,7 +94,7 @@ router.get('/me', auth, async (req, res) => {
 });
 
 // Update the profile of the logged-in user
-router.put('/:user_id', auth, async (req, res) => {
+router.put('/me', auth, async (req, res) => {
   if (req.body.data.password) {
     const { error } = validateEdit(req.body.data);
     if (error) return res.status(400).send(error.details[0].message);
@@ -159,6 +165,38 @@ router.delete('/:user_id', auth, admin, async (req, res) => {
   if (!user) return res.status(404).send('User not found.');
   res.send(_.pick(user, ['user_id', 'name', 'email']));
 });
+
+// Change role of the user (Admin only)
+router.put('/:user_id', auth, admin, async (req, res) => {
+  const user = await prisma.user.findUnique({
+    where: {
+      user_id: parseInt(req.params.user_id),
+    },
+  });
+
+  if (user.role === 'USER') {
+    const updatedUser = await prisma.user.update({
+      where: {
+        user_id: user.user_id,
+      },
+      data: {
+        role: 'ADMIN',
+      },
+    });
+    res.status(200).send(updatedUser);
+  } else {
+    const updatedUser = await prisma.user.update({
+      where: {
+        user_id: user.user_id,
+      },
+      data: {
+        role: 'USER',
+      },
+    });
+    res.status(200).send(updatedUser);
+  }
+});
+
 
 // Login a user
 router.post('/login', async (req, res) => {

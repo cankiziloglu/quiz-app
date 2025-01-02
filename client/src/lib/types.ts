@@ -90,3 +90,8 @@ export type AttemptType = {
 
 export type UserAttemptsType = Attempt & { quiz?: Quiz };
 
+export type AttemptDetailsType = {
+  question: string;
+  answer: string;
+  is_correct: boolean;
+};
