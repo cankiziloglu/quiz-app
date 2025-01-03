@@ -181,7 +181,9 @@ export default function QuestionsDashboard() {
             <Button onClick={() => handleViewQuestion()} className='my-2'>
               Create New Questions
             </Button>
-            <span>{questions.length} Total Questions</span>
+            <span className='text-sm font-medium'>
+              Total Questions: {questions.length}
+            </span>
           </div>
           <DataTable data={questions} columns={questionsDashboardColumns} />
 
@@ -190,20 +192,21 @@ export default function QuestionsDashboard() {
               <DialogHeader>
                 <DialogTitle>Question Details</DialogTitle>
               </DialogHeader>
-              {/* {question ? (
+              {question ? (
                 <EditQuestionForm
                   question={question}
+                  quizId={quizId!}
                   setQuestion={setQuestion}
                   toggleOpen={toggleOpen}
+                  queryClient={queryClient}
                 />
-              ) : ( */}
-              <CreateQuestionForm
-                quizId={quizId!}
-                setQuestion={setQuestion}
-                toggleOpen={toggleOpen}
-                queryClient={queryClient}
-              />
-              {/* )} */}
+              ) : (
+                <CreateQuestionForm
+                  quizId={quizId!}
+                  toggleOpen={toggleOpen}
+                  queryClient={queryClient}
+                />
+              )}
             </DialogContent>
           </Dialog>
         </>
@@ -215,12 +218,10 @@ export default function QuestionsDashboard() {
 // create create questions form function
 function CreateQuestionForm({
   quizId,
-  setQuestion,
   toggleOpen,
   queryClient,
 }: {
   quizId: string;
-  setQuestion: React.Dispatch<React.SetStateAction<Question | undefined>>;
   toggleOpen: () => void;
   queryClient: QueryClient;
 }) {
@@ -252,7 +253,6 @@ function CreateQuestionForm({
       if (created.ok) {
         queryClient.invalidateQueries({ queryKey: ['questions'] });
         toggleOpen();
-        setQuestion(undefined);
       }
     },
   });
@@ -328,6 +328,16 @@ function CreateQuestionForm({
         ))}
       </div>
       <div className='flex justify-end gap-4'>
+        <Button
+          type='button'
+          variant='outline'
+          className=''
+          onClick={() => {
+            toggleOpen();
+          }}
+        >
+          Cancel
+        </Button>
         <Button type='submit' className=''>
           Next Question
         </Button>
@@ -338,6 +348,129 @@ function CreateQuestionForm({
     </form>
   );
 }
-// create questions submit function
 
 // create edit question form function
+function EditQuestionForm({
+  quizId,
+  question,
+  setQuestion,
+  toggleOpen,
+  queryClient,
+}: {
+  quizId: string;
+  question: Question;
+  setQuestion: React.Dispatch<React.SetStateAction<Question | undefined>>;
+  toggleOpen: () => void;
+  queryClient: QueryClient;
+}) {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Question>({
+    resolver: zodResolver(questionSchema),
+    defaultValues: {
+      content: question.content,
+      answers: question.answers,
+    },
+  });
+
+  const editQuestion = useMutation({
+    mutationFn: async (data: Question) => {
+      const updated = await fetch(
+        `/api/quizzes/${quizId}/questions/${question.question_id}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify([data]),
+        }
+      );
+      if (updated.ok) {
+        queryClient.invalidateQueries({ queryKey: ['questions'] });
+        toggleOpen();
+        setQuestion(undefined);
+      }
+    },
+  });
+
+  const { toast } = useToast();
+
+  const handleEditQuestions = (data: Question) => {
+    editQuestion.mutate(data, {
+      onSuccess: () => {
+        toast({ description: 'Question updated successfully' });
+      },
+      onError: () => {
+        toast({ description: 'Failed to update the question' });
+      },
+    });
+  };
+
+  return (
+    <form
+      onSubmit={handleSubmit(handleEditQuestions)}
+      className='flex flex-col justify-center gap-4'
+    >
+      <div>
+        <Label htmlFor='content'>Question</Label>
+        <Textarea
+          id='content'
+          {...register('content')}
+          placeholder='Enter the question'
+        />
+        {errors.content && (
+          <span className='text-red-500 text-sm'>{errors.content.message}</span>
+        )}
+      </div>
+      <div className='flex flex-col gap-2'>
+        <div className='flex gap-2'>
+          <span className='font-medium flex-grow'>Answers</span>
+          <span className='font-medium shrink'>Correct Answer</span>
+        </div>
+        {Array.from({ length: 4 }).map((_, index) => (
+          <div key={index} className='flex gap-4 justify-between'>
+            <div className='flex-grow'>
+              <Textarea
+                {...register(`answers.${index}.content`)}
+                placeholder={`Answer ${index + 1}`}
+              />
+              {errors.answers?.at?.(index)?.content && (
+                <span className='text-red-500 text-sm'>
+                  {errors.answers?.at?.(index)?.content?.message}
+                </span>
+              )}
+            </div>
+            <div>
+              <input
+                type='checkbox'
+                {...register(`answers.${index}.is_correct`)}
+              />
+              {errors.answers?.at?.(index)?.is_correct && (
+                <span className='text-red-500 text-sm'>
+                  {errors.answers?.at?.(index)?.is_correct?.message}
+                </span>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className='flex justify-end gap-4'>
+        <Button
+          type='button'
+          variant='outline'
+          className=''
+          onClick={() => {
+            toggleOpen();
+          }}
+        >
+          Cancel
+        </Button>
+        <Button type='submit' className=''>
+          Save
+        </Button>
+      </div>
+    </form>
+  );
+}

@@ -74,7 +74,7 @@ router.put('/:question_id', auth, admin, async (req, res) => {
 
   const question_id = parseInt(req.params.question_id);
 
-  const data = _.pick(req.body, ['content', 'answers']);
+  const data = req.body[0]
   const question = await prisma.question.update({
     where: {
       question_id: question_id,
