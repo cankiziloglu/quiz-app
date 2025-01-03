@@ -149,9 +149,21 @@ const AccountDetails = () => {
                   </span>
                 )}
               </div>
-              <Button type='submit' size='lg' className='mx-auto'>
-                Submit
-              </Button>
+              <div className='flex gap-4 justify-end'>
+                <Button
+                  type='button'
+                  variant='outline'
+                  className=''
+                  onClick={() => {
+                    setEdit('none');
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button type='submit' size='lg'>
+                  Submit
+                </Button>
+              </div>
             </form>
           </CardContent>
         </Card>
@@ -206,9 +218,21 @@ const AccountDetails = () => {
                   {errors.password.message}
                 </span>
               )}
-              <Button type='submit' size='lg' className='mx-auto'>
-                Submit
-              </Button>
+              <div className='flex gap-4 justify-end'>
+                <Button
+                  type='button'
+                  variant='outline'
+                  className=''
+                  onClick={() => {
+                    setEdit('none');
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button type='submit' size='lg'>
+                  Submit
+                </Button>
+              </div>
             </form>
           </CardContent>
         </Card>
