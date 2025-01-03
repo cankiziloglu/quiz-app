@@ -34,7 +34,7 @@ export default function QuizzesDashboard() {
     if (quizId) {
       setQuiz(data?.find((item) => quizId === item.quiz_id));
     } else {
-      setQuiz(undefined)
+      setQuiz(undefined);
     }
     toggleOpen();
   };
@@ -242,9 +242,21 @@ function EditQuizForm({
           </span>
         )}
       </div>
-      <Button type='submit' size='lg' className='mx-auto'>
-        Submit
-      </Button>
+      <div className='flex justify-end gap-4'>
+        <Button
+          type='button'
+          variant='outline'
+          className=''
+          onClick={() => {
+            toggleOpen();
+          }}
+        >
+          Cancel
+        </Button>
+        <Button type='submit' size='lg'>
+          Save
+        </Button>
+      </div>
     </form>
   );
 }
@@ -345,9 +357,21 @@ function CreateQuizForm({
           </span>
         )}
       </div>
-      <Button type='submit' size='lg' className='mx-auto'>
-        Submit
-      </Button>
+      <div className='flex justify-end gap-4'>
+        <Button
+          type='button'
+          variant='outline'
+          className=''
+          onClick={() => {
+            toggleOpen();
+          }}
+        >
+          Cancel
+        </Button>
+        <Button type='submit' size='lg'>
+          Save
+        </Button>
+      </div>
     </form>
   );
 }
