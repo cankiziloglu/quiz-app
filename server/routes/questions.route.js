@@ -30,7 +30,7 @@ router.post('/', auth, admin, async (req, res) => {
 
   const quiz_id = parseInt(req.params.quiz_id);
 
-  const questions = req.body.map(async (qstn) => {
+  const questions = await Promise.all(req.body.map(async (qstn) => {
     await prisma.question.create({
       data: {
         content: qstn.content,
@@ -47,7 +47,7 @@ router.post('/', auth, admin, async (req, res) => {
         answers: true,
       },
     });
-  });
+  }));
   res.status(201).json(questions);
 });
 

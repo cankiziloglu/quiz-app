@@ -1,13 +1,19 @@
 import { AuthContext } from '@/context/auth-context';
-import { useContext, useState } from 'react';
-import { Link, Navigate, Outlet } from 'react-router-dom';
+import { useContext } from 'react';
+import {
+  Link,
+  Navigate,
+  Outlet,
+  useNavigate,
+  useParams,
+} from 'react-router-dom';
 import { Users, BookOpenCheck, FileQuestion, BarChart2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const Dashboard = () => {
   const auth = useContext(AuthContext);
-
-  const [activeTab, setActiveTab] = useState<string>('users');
+  const params = useParams();
+  const navigate = useNavigate();
 
   const sidebarItems = [
     { title: 'Users', icon: Users, path: 'users' },
@@ -21,14 +27,14 @@ const Dashboard = () => {
   }
 
   return (
-    <div className='flex flex-col md:flex-row gap-8 w-full h-full'>
+    <div className='flex flex-col md:flex-row gap-6 w-full h-full'>
       <aside className='flex flex-wrap md:flex-col gap-2 w-full md:w-1/5 md:h-full justify-center md:justify-start'>
         {sidebarItems.map((item) => (
           <Button
             asChild
             key={item.path}
-            variant={activeTab === item.path ? 'default' : 'outline'}
-            onClick={() => setActiveTab(item.path)}
+            variant={params.section === item.path ? 'default' : 'outline'}
+            onClick={() => navigate(`/dashboard/${item.path}`)}
             className='w-36'
           >
             <Link to={item.path}>
@@ -39,7 +45,7 @@ const Dashboard = () => {
         ))}
       </aside>
 
-      <section className='w-full md:h-full md:w-4/5 flex-grow space-y-6'>
+      <section className='w-full md:h-full md:w-4/5 flex-grow space-y-4'>
         <Outlet />
       </section>
     </div>

@@ -1,6 +1,11 @@
 import useQuizzes from '@/hooks/useQuizzes';
 import { Question, Quiz } from '@/lib/types';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  QueryClient,
+} from '@tanstack/react-query';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { Select, SelectContent, SelectTrigger, SelectValue } from './ui/select';
@@ -95,13 +100,13 @@ export default function QuestionsDashboard() {
               <DropdownMenuItem
                 onClick={() => handleViewQuestion(question.question_id)}
               >
-                View & Edit Quiz
+                View & Edit Question
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 onClick={() => handleDeleteQuestion(question.question_id)}
               >
-                Delete Quiz
+                Delete Question
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -164,17 +169,19 @@ export default function QuestionsDashboard() {
         </Select>
       </div>
       {quiz && (
-        <div className='flex justify-start gap-6 text-sm font-medium'>
+        <div className='flex justify-start gap-4 text-sm font-medium'>
+          <span>Quiz: </span>
           <span>{quiz?.question_count} Questions</span>-
           <span>{quiz?.duration} minutes</span>
         </div>
       )}
       {questions && (
         <>
-          <div>
+          <div className='flex justify-between items-center'>
             <Button onClick={() => handleViewQuestion()} className='my-2'>
               Create New Questions
             </Button>
+            <span>{questions.length} Total Questions</span>
           </div>
           <DataTable data={questions} columns={questionsDashboardColumns} />
 
@@ -194,6 +201,7 @@ export default function QuestionsDashboard() {
                 quizId={quizId!}
                 setQuestion={setQuestion}
                 toggleOpen={toggleOpen}
+                queryClient={queryClient}
               />
               {/* )} */}
             </DialogContent>
@@ -209,10 +217,12 @@ function CreateQuestionForm({
   quizId,
   setQuestion,
   toggleOpen,
+  queryClient,
 }: {
   quizId: string;
   setQuestion: React.Dispatch<React.SetStateAction<Question | undefined>>;
   toggleOpen: () => void;
+  queryClient: QueryClient;
 }) {
   const [questions, setQuestions] = useState<Question[]>([]);
 
@@ -230,8 +240,6 @@ function CreateQuestionForm({
     },
   });
 
-  const queryClient = useQueryClient();
-
   const createQuestion = useMutation({
     mutationFn: async (data: Question[]) => {
       const created = await fetch(`/api/quizzes/${quizId}/questions`, {
@@ -239,7 +247,7 @@ function CreateQuestionForm({
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ data }),
+        body: JSON.stringify(data),
       });
       if (created.ok) {
         queryClient.invalidateQueries({ queryKey: ['questions'] });
@@ -253,11 +261,12 @@ function CreateQuestionForm({
 
   const handleCreateQuestions = () => {
     const data = getValues();
-    setQuestions((prev) => [...prev, data]);
-    reset();
-    createQuestion.mutate(questions, {
+    const allQuestions = [...questions, data];
+    createQuestion.mutate(allQuestions, {
       onSuccess: () => {
         toast({ description: 'Questions created successfully' });
+        reset();
+        setQuestions([]);
       },
       onError: () => {
         toast({ description: 'Failed to create the questions' });
@@ -267,7 +276,6 @@ function CreateQuestionForm({
 
   const onSubmit = (data: Question) => {
     setQuestions((prev) => [...prev, data]);
-
     reset();
   };
 

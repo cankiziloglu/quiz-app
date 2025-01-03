@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, Navigate } from 'react-router-dom';
 import Layout from './layout';
 import ErrorPage from './error-page';
 import Home from './home';
@@ -35,6 +35,10 @@ const router = createBrowserRouter([
           { path: 'quiz', element: <Quiz /> },
           {
             path: 'dashboard',
+            element: <Navigate to='/dashboard/users' replace />,
+          },
+          {
+            path: 'dashboard/:section',
             element: <Dashboard />,
             children: [
               { index: true, element: <UsersDashboard /> },

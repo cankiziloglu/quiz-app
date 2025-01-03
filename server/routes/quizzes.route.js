@@ -20,8 +20,8 @@ router.get('/', async (req, res) => {
 
 // Create new quiz by authenticated and admin users only.
 router.post('/', auth, admin, async (req, res) => {
-  const { error } = validate(req.body.data);
-  const data = req.body.data
+  const { error } = validate(req.body);
+  const data = req.body
   if (error) return res.status(400).send(error.details[0].message);
   const quiz = await prisma.quiz.create({
     data
@@ -50,16 +50,15 @@ router.get('/:quiz_id', auth, async (req, res) => {
 
 // PUT: changes details of a quiz by authenticated and admin users only.
 router.put('/:quiz_id', auth, admin, async (req, res) => {
-  const { error } = validate(req.body.data);
+  const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
-  const data = _.pick(req.body.data, [
+  const data = _.pick(req.body, [
     'title',
     'description',
     'duration',
     'question_count',
     'tags',
   ]);
-  console.log(data)
   const quiz = await prisma.quiz.update({
     where: {
       quiz_id: parseInt(req.params.quiz_id),
