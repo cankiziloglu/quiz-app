@@ -1,6 +1,5 @@
 import { Quiz } from '@/lib/types';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useToast } from './ui/use-toast';
 import { ColumnDef } from '@tanstack/react-table';
 import {
@@ -21,15 +20,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { quizSchema } from '@/lib/schemas';
 import { Label } from './ui/label';
 import { Input } from './ui/input';
+import useQuizzes from '@/hooks/useQuizzes';
 
 export default function QuizzesDashboard() {
-  const { data, isLoading, error } = useQuery<Quiz[]>({
-    queryKey: ['quizzes'],
-    queryFn: async () => {
-      return axios.get('/api/quizzes/').then((res) => res.data);
-    },
-    staleTime: 1000 * 60 * 15, // 15 minutes
-  });
+  const { data, isLoading, error } = useQuizzes();
 
   const [isOpen, setIsOpen] = useState(false);
   const [quiz, setQuiz] = useState<Quiz>();
@@ -39,6 +33,8 @@ export default function QuizzesDashboard() {
   const handleViewDetails = (quizId?: string) => {
     if (quizId) {
       setQuiz(data?.find((item) => quizId === item.quiz_id));
+    } else {
+      setQuiz(undefined)
     }
     toggleOpen();
   };
@@ -52,7 +48,7 @@ export default function QuizzesDashboard() {
         method: 'DELETE',
       });
       if (deleted.ok) {
-        queryClient.invalidateQueries({ queryKey: [ 'quizzes' ] });
+        queryClient.invalidateQueries({ queryKey: ['quizzes'] });
       }
     },
   });
@@ -296,7 +292,6 @@ function CreateQuizForm({
   const { toast } = useToast();
 
   const handleCreateQuiz = (data: Quiz) => {
-    console.log(data)
     createQuiz.mutate(data, {
       onSuccess: () => {
         toast({ description: 'Quiz created successfully' });

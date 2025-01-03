@@ -30,11 +30,9 @@ const AccountDetails = () => {
   const auth = useAuthContext();
   const [edit, setEdit] = useState<EditType>('none');
 
-  const editUser = useEditAccount(auth!.authState!.user_id!);
+  const editUser = useEditAccount();
 
   const { toast } = useToast();
-
-  
 
   type editAccountSchemaType = z.infer<typeof editAccountSchema>;
 

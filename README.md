@@ -51,13 +51,20 @@ This is a full-stack Quiz Application built with Node.js, Express, React, and Ta
 
 ### Backend
 
-The backend is built with Node.js and Express. It provides RESTful APIs for managing users, quizzes, questions, and attempts. Data validation is handled using Joi. Database queries and transactions are handled with Prisma Orm using a Postgres database. The backend includes middleware for authentication, authorization, security, logging, and error handling. User passwords are hashed using bcrypt and session tokens are created using jwt and passed as cookies to the frontend.
+The backend is built with Node.js and Express. It provides RESTful APIs for managing users, quizzes, questions, and attempts. Data validation is handled using Joi. Database queries and transactions are handled with Prisma Orm using a Postgres database. The backend includes middleware for authentication, authorization, security, logging, and error handling. User passwords are hashed using bcrypt and session tokens are created using jwt and passed as cookies to the frontend. 
+
+When a user requests to take a quiz, a new attempt is created in the database. Questions are fetched from the db and shuffled and sliced according to the quiz length for the selected quiz and attached to the attempt sent to the frontend. When the user completes the quiz the attempt is updated with user answers and the score is calculated and sent back to the frontend. 
 
 ### Frontend
 
-The frontend is built with React and TypeScript. It uses React Router for navigation and React Query for data fetching. The UI is styled using Tailwind CSS. The frontend communicates with the backend APIs to perform CRUD operations and manage user sessions. When a user starts an attempt to a quiz, the questions are stored in local storage, so if the user terminates that session and comes back later to solve the same quiz, questions are served from local storage. Authentication, quiz and attempt data are managed using state (context API). When the user finishes and submits a quiz the result is immediately calculated and shown to the user. User can also view past attempts and their scores and details in their account page. Admins can manage (view, create, edit, delete) users, quizzes, questions and attempts on their dashboard.
+The frontend is built with React and TypeScript. It uses React Router for navigation and React Query for data fetching. The UI is styled using Tailwind CSS. The frontend communicates with the backend APIs to perform CRUD operations and manage user sessions. When a user starts an attempt to a quiz, the questions are stored in local storage, so if the user terminates that session and comes back later to solve the same quiz, questions are served from local storage. Authentication, quiz and attempt data are managed using state (context API). 
 
-## Routes and Their Usage
+When the user finishes and submits a quiz the result is fetched from the backend and shown to the user. User can also view past attempts and their scores and details in their account page. 
+
+Admins can manage (view, create, edit, delete) users, quizzes, questions and attempts on their dashboard.
+
+
+## API Routes and Their Usage
 
 ### Backend (under `/server`)
 
@@ -67,7 +74,7 @@ The frontend is built with React and TypeScript. It uses React Router for naviga
   - `POST /api/users/login`: User sign in.
   - `POST /api/users/logout`: User sign out.
   - `GET /api/users/me`: Get user details. - _only available to authenticated users_
-  - `PUT /api/users/edit`: Edit user details. - _only available to authenticated users_
+  - `PUT /api/users/me`: Edit user details. - _only available to authenticated users_
   - `GET /api/users`: Get all users. - _only available to an ADMIN_
   - `GET /api/users/:user_id`: Get user by id. - _only available to an ADMIN_
   - `PUT /api/users/edit`: Change user's role. - _only available to an ADMIN_

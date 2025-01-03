@@ -33,3 +33,28 @@ export const quizSchema = z.object({
   duration: z.coerce.number().int().min(1),
   tags: z.string().array().optional(),
 });
+
+export const questionSchema = z
+  .object({
+    content: z.string().min(3).max(1000),
+    answers: z
+      .array(
+        z.object({
+          content: z.string().min(1).max(500),
+          is_correct: z.boolean(),
+        })
+      )
+      .length(4),
+  })
+  .superRefine((question, ctx) => {
+    const correctAnswers = question.answers.filter(
+      (answer) => answer.is_correct
+    );
+    if (correctAnswers.length !== 1) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'There must be exactly 1 correct answer',
+        path: ['content'],
+      });
+    }
+  });

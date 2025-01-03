@@ -45,6 +45,7 @@ export type Question = {
   created_at?: string;
   updated_at?: string;
   quiz_id?: string;
+  
 };
 
 export type Answer = {

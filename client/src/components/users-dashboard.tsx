@@ -24,8 +24,6 @@ export default function UsersDashboard() {
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
-  console.log(data);
-
   const queryClient = useQueryClient();
 
   const roleChange = useMutation({
