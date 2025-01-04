@@ -1,6 +1,9 @@
-
 import { DataTable } from './ui/data-table';
-import { AttemptDetailsType, UserAttemptsType } from '@/lib/types';
+import {
+  AttemptDetailsType,
+  TransformedAttempt,
+  UserAttemptsType,
+} from '@/lib/types';
 import { ColumnDef } from '@tanstack/react-table';
 import {
   DropdownMenu,
@@ -23,9 +26,7 @@ import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useToast } from './ui/use-toast';
 
-
 const UserStatistics = () => {
-
   const { data, error, isLoading } = useQuery<UserAttemptsType[]>({
     queryKey: ['userAttempts'],
     queryFn: () =>
@@ -36,11 +37,11 @@ const UserStatistics = () => {
     refetchOnWindowFocus: false,
   });
 
-  const userAttempts: UserAttemptsType[] | undefined = data?.map((attempt) => ({
+  const userAttempts = data?.map((attempt) => ({
     attempt_id: attempt.attempt_id,
     quiz_title: attempt.quiz?.title,
     created_at: new Date(attempt.created_at as string).toDateString(),
-    score: attempt.score,
+    score: `${attempt.score} / ${attempt.question_count}`,
   }));
 
   const getAttemptDetails = (attemptId: string): AttemptDetailsType[] => {
@@ -54,7 +55,7 @@ const UserStatistics = () => {
     return attemptDetails;
   };
 
-  const userAttemptColumns: ColumnDef<UserAttemptsType>[] = [
+  const userAttemptColumns: ColumnDef<TransformedAttempt>[] = [
     // {
     //   accessorKey: 'attempt_id',
     //   header: 'ID',

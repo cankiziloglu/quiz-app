@@ -105,3 +105,13 @@ export type AttemptDetailsType = {
   answer: string;
   is_correct: boolean;
 };
+
+export type TransformedAttempt = {
+    user_name?: string | undefined;
+    user_id?: string;
+    attempt_id: string;
+    quiz_title: string;
+    quiz_id?: string;
+    created_at: string;
+    score: string;
+  }

@@ -1,4 +1,4 @@
-import { Attempt, AttemptDetailsType, UserAttemptsType } from '@/lib/types';
+import { Attempt, AttemptDetailsType, TransformedAttempt, UserAttemptsType } from '@/lib/types';
 import { ColumnDef } from '@tanstack/react-table';
 import {
   DropdownMenu,
@@ -69,16 +69,7 @@ export default function AttemptsDashboard() {
     return attemptDetails;
   };
 
-  type TransformedAttempt = {
-    user_name: string | undefined;
-    user_id: string;
-    attempt_id: string;
-    quiz_title: string;
-    quiz_id: string;
-    created_at: string;
-    score: string;
-  }
-
+  
   const userAttemptColumns: ColumnDef<TransformedAttempt>[] = [
     {
       accessorKey: 'user_name',
