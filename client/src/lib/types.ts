@@ -18,6 +18,7 @@ export type Attempt = {
   question_count?: number;
   score?: number | null;
   quiz?: Quiz;
+  user?: UserType
 };
 
 export type UserAnswer = {
@@ -45,7 +46,6 @@ export type Question = {
   created_at?: string;
   updated_at?: string;
   quiz_id?: string;
-  
 };
 
 export type Answer = {
@@ -89,7 +89,16 @@ export type AttemptType = {
   shuffledQuestions: Question[];
 };
 
-export type UserAttemptsType = Attempt & { quiz?: Quiz };
+export type UserAttemptsType = {
+  user_name: string;
+  user_id: string;
+  attempt_id: string;
+  quiz_title: string;
+  quiz_id: string;
+  created_at: string;
+  score: string;
+  question_count?: number;
+} & { user: UserType } & { quiz: Quiz } & { userAnswers: UserAnswer[] };
 
 export type AttemptDetailsType = {
   question: string;

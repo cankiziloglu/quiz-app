@@ -19,7 +19,7 @@ export default function UsersDashboard() {
   const { data, isLoading, error } = useQuery<UserType[]>({
     queryKey: ['users'],
     queryFn: () => {
-      return axios.get('/api/users/').then((res) => res.data);
+      return axios.get('/api/users').then((res) => res.data);
     },
     staleTime: 1000 * 60 * 5, // 5 minutes
   });

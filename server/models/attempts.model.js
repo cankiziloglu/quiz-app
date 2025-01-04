@@ -29,6 +29,16 @@ function shuffleQuestions(questions, questionCount) {
     const j = Math.floor(Math.random() * (i + 1));
     [questions[i], questions[j]] = [questions[j], questions[i]];
   }
+  // Shuffle answers for each question
+  questions.forEach(question => {
+    if (question.answers && Array.isArray(question.answers)) {
+      for (let i = question.answers.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [question.answers[i], question.answers[j]] = [question.answers[j], question.answers[i]];
+      }
+    }
+  });
+
   questions = questions.slice(0, questionCount);
   return questions;
 }

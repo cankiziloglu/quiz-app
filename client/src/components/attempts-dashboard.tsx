@@ -1,5 +1,5 @@
-import { AttemptDetailsType, UserAttemptsType } from "@/lib/types";
-import { ColumnDef } from "@tanstack/react-table";
+import { Attempt, AttemptDetailsType, UserAttemptsType } from '@/lib/types';
+import { ColumnDef } from '@tanstack/react-table';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,27 +20,42 @@ import {
 import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useToast } from './ui/use-toast';
-import { DataTable } from "./ui/data-table";
+import { DataTable } from './ui/data-table';
 
 export default function AttemptsDashboard() {
+  const [quizId, setQuizId] = useState<string | undefined>();
 
-  
-  
+  const [userId, setUserId] = useState<string | undefined>();
+
   const { data, error, isLoading } = useQuery<UserAttemptsType[]>({
-    queryKey: ['attempts'],
-    queryFn: async () =>
-      await fetch('/api/attempt', {
-      method:'GET'
-      }).then((res) => res.json()),
+    queryKey: ['attempts', quizId, userId],
+    queryFn: async () => {
+      const url =
+        quizId && userId
+          ? `?quiz_id=${quizId}&user_id=${userId}`
+          : quizId
+          ? `?quiz_id=${quizId}`
+          : userId
+          ? `?user_id=${userId}`
+          : '';
+      const response = await fetch(`/api/attempt${url}`, {
+        method: 'GET',
+      });
+      return response.json();
+    },
     staleTime: 1000 * 60 * 10, // 10 minutes
     refetchOnWindowFocus: false,
   });
+  
 
-  const userAttempts: UserAttemptsType[] | undefined = data?.map((attempt) => ({
+  const userAttempts = data?.map((attempt) => ({
+    user_name: attempt.user.name,
+    user_id: attempt.user_id,
     attempt_id: attempt.attempt_id,
-    quiz_title: attempt.quiz?.title,
+    quiz_title: attempt.quiz.title,
+    quiz_id: attempt.quiz_id,
     created_at: new Date(attempt.created_at as string).toDateString(),
-    score: attempt.score,
+    score: `${attempt.score} / ${attempt.question_count}`,
   }));
 
   const getAttemptDetails = (attemptId: string): AttemptDetailsType[] => {
@@ -54,12 +69,21 @@ export default function AttemptsDashboard() {
     return attemptDetails;
   };
 
-  const userAttemptColumns: ColumnDef<UserAttemptsType>[] = [
-    // {
-    //   accessorKey: 'attempt_id',
-    //   header: 'ID',
-    //   enableHiding: true,
-    // },
+  type TransformedAttempt = {
+    user_name: string | undefined;
+    user_id: string;
+    attempt_id: string;
+    quiz_title: string;
+    quiz_id: string;
+    created_at: string;
+    score: string;
+  }
+
+  const userAttemptColumns: ColumnDef<TransformedAttempt>[] = [
+    {
+      accessorKey: 'user_name',
+      header: 'User',
+    },
     {
       accessorKey: 'quiz_title',
       header: 'Quiz',
@@ -191,5 +215,4 @@ export default function AttemptsDashboard() {
       </Dialog>
     </>
   );
-};
-
+}

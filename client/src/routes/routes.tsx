@@ -11,7 +11,7 @@ import Me from './me';
 import UsersDashboard from '@/components/users-dashboard';
 import QuizzesDashboard from '@/components/quizzes-dashboard';
 import QuestionsDashboard from '@/components/questions-dashboard';
-import AttemptsDashboard from '@/components/attmepts-dashboard';
+import AttemptsDashboard from '@/components/attempts-dashboard';
 
 const router = createBrowserRouter([
   {
