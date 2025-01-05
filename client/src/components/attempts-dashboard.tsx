@@ -1,4 +1,4 @@
-import { Attempt, AttemptDetailsType, TransformedAttempt, UserAttemptsType } from '@/lib/types';
+import { AttemptDetailsType, TransformedAttempt, UserAttemptsType } from '@/lib/types';
 import { ColumnDef } from '@tanstack/react-table';
 import {
   DropdownMenu,
@@ -46,6 +46,8 @@ export default function AttemptsDashboard() {
     staleTime: 1000 * 60 * 10, // 10 minutes
     refetchOnWindowFocus: false,
   });
+
+  
   
 
   const userAttempts = data?.map((attempt) => ({
