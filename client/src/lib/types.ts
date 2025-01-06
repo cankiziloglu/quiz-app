@@ -107,7 +107,7 @@ export type AttemptDetailsType = {
 };
 
 export type TransformedAttempt = {
-    user_name?: string | undefined;
+    user_name?: string;
     user_id?: string;
     attempt_id: string;
     quiz_title: string;

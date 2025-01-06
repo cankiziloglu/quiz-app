@@ -1,44 +1,28 @@
-import { AttemptDetailsType, TransformedAttempt, UserAttemptsType } from '@/lib/types';
+import { TransformedAttempt, UserAttemptsType } from '@/lib/types';
 import { ColumnDef } from '@tanstack/react-table';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from './ui/dropdown-menu';
 import { Button } from './ui/button';
 import { DotsVerticalIcon } from '@radix-ui/react-icons';
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from './ui/dialog';
+
 import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useToast } from './ui/use-toast';
 import { DataTable } from './ui/data-table';
+import { Input } from './ui/input';
+import { Filter } from 'lucide-react';
+import { useDebounce } from '@/lib/utils';
 
 export default function AttemptsDashboard() {
-  const [quizId, setQuizId] = useState<string | undefined>();
-
-  const [userId, setUserId] = useState<string | undefined>();
-
   const { data, error, isLoading } = useQuery<UserAttemptsType[]>({
-    queryKey: ['attempts', quizId, userId],
+    queryKey: ['attempts'],
     queryFn: async () => {
-      const url =
-        quizId && userId
-          ? `?quiz_id=${quizId}&user_id=${userId}`
-          : quizId
-          ? `?quiz_id=${quizId}`
-          : userId
-          ? `?user_id=${userId}`
-          : '';
-      const response = await fetch(`/api/attempt${url}`, {
+      const response = await fetch(`/api/attempt`, {
         method: 'GET',
       });
       return response.json();
@@ -47,31 +31,20 @@ export default function AttemptsDashboard() {
     refetchOnWindowFocus: false,
   });
 
-  
-  
+  const userAttempts: TransformedAttempt[] =
+    data?.map((attempt) => ({
+      user_name: attempt.user.name,
+      user_id: attempt.user_id,
+      attempt_id: attempt.attempt_id,
+      quiz_title: attempt.quiz.title,
+      quiz_id: attempt.quiz_id,
+      created_at: new Date(attempt.created_at as string).toDateString(),
+      score: `${attempt.score} / ${attempt.question_count}`,
+    })) ?? [];
 
-  const userAttempts = data?.map((attempt) => ({
-    user_name: attempt.user.name,
-    user_id: attempt.user_id,
-    attempt_id: attempt.attempt_id,
-    quiz_title: attempt.quiz.title,
-    quiz_id: attempt.quiz_id,
-    created_at: new Date(attempt.created_at as string).toDateString(),
-    score: `${attempt.score} / ${attempt.question_count}`,
-  }));
+  const [filteredAttempts, setFilteredAttempts] =
+    useState<TransformedAttempt[]>(userAttempts);
 
-  const getAttemptDetails = (attemptId: string): AttemptDetailsType[] => {
-    const attemptDetails = data
-      ?.find((attempt) => attempt.attempt_id === attemptId)
-      ?.userAnswers?.map((attempt) => ({
-        question: attempt.question?.content,
-        answer: attempt.answer?.content,
-        is_correct: attempt.answer?.is_correct,
-      })) as AttemptDetailsType[]; // Add type assertion here
-    return attemptDetails;
-  };
-
-  
   const userAttemptColumns: ColumnDef<TransformedAttempt>[] = [
     {
       accessorKey: 'user_name',
@@ -104,12 +77,6 @@ export default function AttemptsDashboard() {
             <DropdownMenuContent align='end'>
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuItem
-                onClick={() => handleViewDetails(attempt.attempt_id!)}
-              >
-                View Details
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
                 onClick={() => handleDeleteAttempt(attempt.attempt_id!)}
               >
                 Delete Attempt
@@ -121,43 +88,6 @@ export default function AttemptsDashboard() {
     },
   ];
 
-  const userAnswerColumns: ColumnDef<AttemptDetailsType>[] = [
-    {
-      accessorKey: 'question',
-      header: 'Question',
-    },
-    {
-      accessorKey: 'answer',
-      header: 'Answer',
-    },
-    {
-      accessorKey: 'is_correct',
-      header: 'Correct?',
-      cell: ({ row }) => {
-        const isCorrect = row.original.is_correct;
-        return isCorrect ? (
-          <span className='text-green-600'>Yes</span>
-        ) : (
-          <span className='text-red-600'>No</span>
-        );
-      },
-      // footer: (rows) => {
-      //   const correctCount = rows.filter((row) => row.original.is_correct).length
-      //   return `${correctCount} / ${rows.length}`
-      // }
-    },
-  ];
-
-  const [isOpen, setIsOpen] = useState(false);
-  const [attemptId, setAttemptId] = useState('');
-  const toggleOpen = () => {
-    setIsOpen(!isOpen);
-  };
-  const handleViewDetails = (attemptId: string) => {
-    setAttemptId(attemptId);
-    toggleOpen();
-  };
-
   const queryClient = useQueryClient();
 
   const deletion = useMutation({
@@ -166,7 +96,7 @@ export default function AttemptsDashboard() {
         method: 'DELETE',
       });
       if (deleted.ok) {
-        queryClient.invalidateQueries({ queryKey: ['userAttempts'] });
+        queryClient.invalidateQueries({ queryKey: ['attempts'] });
       }
     },
   });
@@ -183,29 +113,42 @@ export default function AttemptsDashboard() {
     });
   };
 
+  function filterByUser(user: string) {
+    setFilteredAttempts(
+      userAttempts?.filter((attempt) =>
+        attempt.user_name?.toLowerCase().includes(user.toLowerCase())
+      )
+    );
+  }
+
+  function filterByQuiz(quiz: string) {
+    setFilteredAttempts(
+      userAttempts?.filter((attempt) =>
+        attempt.quiz_title?.toLowerCase().includes(quiz.toLowerCase())
+      )
+    );
+  }
+
+  const debouncedAttempts = useDebounce(filteredAttempts);
+
   return isLoading ? (
     <div>Loading...</div>
   ) : error ? (
     <div>No Attempts found</div>
   ) : (
     <>
-      <DataTable columns={userAttemptColumns} data={userAttempts!} />
-      <Dialog open={isOpen} onOpenChange={toggleOpen}>
-        <DialogContent className='max-h-screen overflow-y-scroll max-w-full md:w-2/3 text-xs'>
-          <DialogHeader>
-            <DialogTitle>Quiz Attempt Details</DialogTitle>
-          </DialogHeader>
-          <DataTable
-            columns={userAnswerColumns}
-            data={getAttemptDetails(attemptId) as AttemptDetailsType[]}
-          />
-          <DialogFooter>
-            <Button variant='secondary' onClick={toggleOpen}>
-              Close
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <div className='flex gap-2 justify-start max-w-[600px]'>
+        <Filter className='size-8' />
+        <Input
+          placeholder='Filter by User'
+          onChange={(e) => filterByUser(e.target.value)}
+        />
+        <Input
+          placeholder='Filter by Quiz'
+          onChange={(e) => filterByQuiz(e.target.value)}
+        />
+      </div>
+      <DataTable columns={userAttemptColumns} data={debouncedAttempts!} />
     </>
   );
 }
