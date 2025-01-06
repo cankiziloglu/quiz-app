@@ -10,7 +10,7 @@ import {
 import { Button } from './ui/button';
 import { DotsVerticalIcon } from '@radix-ui/react-icons';
 
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useToast } from './ui/use-toast';
 import { DataTable } from './ui/data-table';
@@ -31,19 +31,28 @@ export default function AttemptsDashboard() {
     refetchOnWindowFocus: false,
   });
 
-  const userAttempts: TransformedAttempt[] =
-    data?.map((attempt) => ({
-      user_name: attempt.user.name,
-      user_id: attempt.user_id,
-      attempt_id: attempt.attempt_id,
-      quiz_title: attempt.quiz.title,
-      quiz_id: attempt.quiz_id,
-      created_at: new Date(attempt.created_at as string).toDateString(),
-      score: `${attempt.score} / ${attempt.question_count}`,
-    })) ?? [];
+  const userAttempts = useMemo(
+    () =>
+      data?.map((attempt) => ({
+        user_name: attempt.user.name,
+        user_id: attempt.user_id,
+        attempt_id: attempt.attempt_id,
+        quiz_title: attempt.quiz.title,
+        quiz_id: attempt.quiz_id,
+        created_at: new Date(attempt.created_at as string).toDateString(),
+        score: `${attempt.score} / ${attempt.question_count}`,
+      })) ?? [],
+    [data]
+  );
 
   const [filteredAttempts, setFilteredAttempts] =
-    useState<TransformedAttempt[]>(userAttempts);
+    useState<TransformedAttempt[]>([]);
+
+  useEffect(() => {
+    if (userAttempts) {
+      setFilteredAttempts(userAttempts);
+    }
+  }, [userAttempts]);
 
   const userAttemptColumns: ColumnDef<TransformedAttempt>[] = [
     {
@@ -137,15 +146,17 @@ export default function AttemptsDashboard() {
     <div>No Attempts found</div>
   ) : (
     <>
-      <div className='flex gap-2 justify-start max-w-[600px]'>
-        <Filter className='size-8' />
+      <div className='flex gap-2 justify-start items-center'>
+        <Filter className='w-4 min-w-4 h-4 min-h-4' />
         <Input
           placeholder='Filter by User'
           onChange={(e) => filterByUser(e.target.value)}
+          className='max-w-72'
         />
         <Input
           placeholder='Filter by Quiz'
           onChange={(e) => filterByQuiz(e.target.value)}
+          className='max-w-72'
         />
       </div>
       <DataTable columns={userAttemptColumns} data={debouncedAttempts!} />

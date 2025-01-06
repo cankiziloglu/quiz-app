@@ -14,6 +14,10 @@ import { DataTable } from './ui/data-table';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { useToast } from './ui/use-toast';
+import { useEffect, useState } from 'react';
+import { Filter } from 'lucide-react';
+import { Input } from './ui/input';
+import { useDebounce } from '@/lib/utils';
 
 export default function UsersDashboard() {
   const { data, isLoading, error } = useQuery<UserType[]>({
@@ -78,6 +82,9 @@ export default function UsersDashboard() {
     {
       accessorKey: 'email',
       header: 'Email',
+      cell: ({ row }) => (
+        <div className='max-w-[100px] truncate'>{row.getValue('email')}</div>
+      ),
     },
     {
       accessorKey: 'role',
@@ -112,6 +119,24 @@ export default function UsersDashboard() {
     },
   ];
 
+  const [filteredUsers, setFilteredUsers] = useState<UserType[]>([]);
+
+  useEffect(() => {
+    if (data) {
+      setFilteredUsers(data);
+    }
+  }, [data]);
+
+  function filter(user: string) {
+    setFilteredUsers(
+      data?.filter((us) =>
+        us.name?.toLowerCase().includes(user.toLowerCase())
+      ) ?? []
+    );
+  }
+
+  const debouncedUsers = useDebounce(filteredUsers);
+
   if (error) {
     console.error(error);
     return null;
@@ -120,6 +145,16 @@ export default function UsersDashboard() {
   return isLoading ? (
     <div>Loading...</div>
   ) : (
-    <DataTable columns={usersDashboardColumns} data={data!} />
+    <>
+      <div className='flex gap-2 justify-start items-center'>
+        <Filter className='w-4 min-w-4 h-4 min-h-4' />
+        <Input
+          placeholder='Filter'
+          onChange={(e) => filter(e.target.value)}
+          className='max-w-72'
+        />
+      </div>
+      <DataTable columns={usersDashboardColumns} data={debouncedUsers} />
+    </>
   );
 }

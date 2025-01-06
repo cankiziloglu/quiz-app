@@ -13,7 +13,7 @@ import {
 import { Button } from './ui/button';
 import { DotsVerticalIcon } from '@radix-ui/react-icons';
 import { DataTable } from './ui/data-table';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -21,6 +21,8 @@ import { quizSchema } from '@/lib/schemas';
 import { Label } from './ui/label';
 import { Input } from './ui/input';
 import useQuizzes from '@/hooks/useQuizzes';
+import { Filter } from 'lucide-react';
+import { useDebounce } from '@/lib/utils';
 
 export default function QuizzesDashboard() {
   const { data, isLoading, error } = useQuizzes();
@@ -108,6 +110,24 @@ export default function QuizzesDashboard() {
     },
   ];
 
+  const [filteredQuizzes, setFilteredQuizzes] = useState<Quiz[]>([]);
+
+  useEffect(() => {
+    if (data) {
+      setFilteredQuizzes(data);
+    }
+  }, [data]);
+
+  function filter(quiz: string) {
+    setFilteredQuizzes(
+      data?.filter((qu) =>
+        qu.title?.toLowerCase().includes(quiz.toLowerCase())
+      ) ?? []
+    );
+  }
+
+  const debouncedQuizzes = useDebounce(filteredQuizzes);
+
   if (error) {
     console.error(error);
     return null;
@@ -117,12 +137,19 @@ export default function QuizzesDashboard() {
     <div>Loading...</div>
   ) : (
     <>
-      <div>
-        <Button onClick={() => handleViewDetails()} className='my-2'>
-          Create New Quiz
+      <div className='flex gap-2 justify-start items-center'>
+        <Button onClick={() => handleViewDetails()} className='my-2 mr-6'>
+          New Quiz
         </Button>
+
+        <Filter className='w-4 min-w-4 h-4 min-h-4' />
+        <Input
+          placeholder='Filter'
+          onChange={(e) => filter(e.target.value)}
+          className='max-w-72'
+        />
       </div>
-      <DataTable columns={quizzesDashboardColumns} data={data!} />
+      <DataTable columns={quizzesDashboardColumns} data={debouncedQuizzes!} />
 
       <Dialog open={isOpen} onOpenChange={toggleOpen}>
         <DialogContent className='max-h-screen overflow-y-scroll overflow-x-hidden max-w-2xl text-sm'>
