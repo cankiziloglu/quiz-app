@@ -157,13 +157,46 @@ router.get('/:user_id', auth, admin, async (req, res) => {
 
 // Delete user by ID (admin only)
 router.delete('/:user_id', auth, admin, async (req, res) => {
-  const user = await prisma.user.delete({
-    where: {
-      user_id: parseInt(req.params.user_id),
-    },
-  });
-  if (!user) return res.status(404).send('User not found.');
-  res.send(_.pick(user, ['user_id', 'name', 'email']));
+  try {
+    const result = await prisma.$transaction(async (tx) => {
+      // Find all attempts of user
+      const attempts = await tx.quizAttempt.findMany({
+        where: {
+          user_id: parseInt(req.params.user_id),
+        },
+      });
+
+      // First delete all user answers
+      attempts.forEach(async (attempt) => {
+        await tx.userAnswer.deleteMany({
+          where: {
+            attempt_id: attempt.attempt_id,
+          },
+        });
+      });
+      
+      // Then delete all quiz attempts for this user
+      await tx.quizAttempt.deleteMany({
+        where: {
+          user_id: parseInt(req.params.user_id),
+        },
+      });
+
+      // Then delete the user
+      const deletedUser = await tx.user.delete({
+        where: {
+          user_id: parseInt(req.params.user_id),
+        },
+      });
+
+      return deletedUser;
+    });
+
+    res.send(result);
+  } catch (error) {
+    console.error('Delete user error:', error);
+    res.status(500).send('Error deleting user');
+  }
 });
 
 // Change role of the user (Admin only)
@@ -196,7 +229,6 @@ router.put('/:user_id', auth, admin, async (req, res) => {
     res.status(200).send(updatedUser);
   }
 });
-
 
 // Login a user
 router.post('/login', async (req, res) => {

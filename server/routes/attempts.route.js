@@ -208,19 +208,28 @@ router.delete('/:attempt_id', auth, async (req, res) => {
   });
   if (!attempt) return res.status(404).send('Attempt not found.');
 
-  await prisma.userAnswer.deleteMany({
-    where: {
-      attempt_id: attempt_id,
-    },
-  });
+  try {
+    const result = await prisma.$transaction(async (tx) => {
+      await tx.userAnswer.deleteMany({
+        where: {
+          attempt_id: attempt_id,
+        },
+      });
 
-  await prisma.quizAttempt.delete({
-    where: {
-      attempt_id: attempt_id,
-      user_id: req.user.user_id,
-    },
-  });
-  res.json((message = 'Attempt deleted'));
+      const deletedAttempt = await tx.quizAttempt.delete({
+        where: {
+          attempt_id: attempt_id,
+          user_id: req.user.user_id,
+        },
+      });
+      return deletedAttempt;
+    });
+
+    res.json((message = 'Attempt deleted')).send(result);
+  } catch (error) {
+    console.error('Delete attempt error:', error);
+    res.status(500).send('Error deleting attempt');
+  }
 });
 
 module.exports = router;
