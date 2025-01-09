@@ -1,5 +1,5 @@
 import QuizPicker from '@/components/quiz-picker';
-import quizChallengeImage from '../assets/quiz-challenge.png';
+import quizChallengeImage from '../assets/quiz-challenge.webp';
 
 function Home() {
   return (

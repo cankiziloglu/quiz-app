@@ -1,5 +1,5 @@
 import SignupForm from '@/components/signup-form';
-import quizChallengeImage from '../assets/quiz-challenge.png';
+import quizChallengeImage from '../assets/quiz-challenge.webp';
 
 const Signup = () => {
   return (
